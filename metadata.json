@@ -1,0 +1,8 @@
+{
+  "name": "Esmeralda Inteligente Jairrestaura",
+  "description": "Plataforma universal y 100% gratuita del sector esmeraldero colombiano: inventario, pasaporte digital QR, valoración gemológica, comercio, control de tallado, academia y asistentes IA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

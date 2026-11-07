@@ -1,0 +1,22 @@
+{
+  "short_name": "Jairrestaura",
+  "name": "ESMERALDA INTELIGENTE JAIRRESTAURA",
+  "description": "Plataforma universal del sector esmeraldero colombiano. Herramientas, inventario, pasaporte digital, valoración y asistentes IA.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#022c22",
+  "theme_color": "#064e3b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
