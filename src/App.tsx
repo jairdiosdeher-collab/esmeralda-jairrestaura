@@ -60,7 +60,7 @@ export default function App() {
     window.addEventListener('jairrestaura:operations-updated', handleDataUpdate);
     window.addEventListener('jairrestaura:directory-updated', handleDataUpdate);
 
-    // Hash router check for #pasaporte/{id}
+    // Hash router check for #pasaporte/{id} and #certificado/{serial}
     const checkHash = () => {
       const hash = window.location.hash;
       if (hash.startsWith('#pasaporte/')) {
@@ -70,6 +70,8 @@ export default function App() {
           setSelectedPassportStone(stone);
           setIsPassportModalOpen(true);
         }
+      } else if (hash.startsWith('#certificado/')) {
+        setCurrentTab('academia');
       }
     };
     checkHash();

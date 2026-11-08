@@ -1050,6 +1050,7 @@ export const ACADEMY_QUIZ = [
 ];
 
 export const CERTIFICATE_TRACKS = [
+  'DIPLOMADO EN GEMOLOGÍA, GEOLOGÍA, IDENTIFICACIÓN, TALLA Y COMERCIALIZACIÓN DE LA ESMERALDA COLOMBIANA (120 HORAS)',
   'Diplomado en Gemología y Clasificación de Esmeraldas Colombianas',
   'Especialista en Evaluación, Tallas y Rendimiento Lapidario',
   'Experto en Comercio Internacional, Trazabilidad RUCOM y Certificación',

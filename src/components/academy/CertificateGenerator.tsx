@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { CERTIFICATE_TRACKS } from '../../data/sampleData';
 import { Logo } from '../common/Logo';
+import { AcademyStorageService } from '../../services/academyStorage';
 
 interface CertificateGeneratorProps {
   defaultStudentName?: string;
@@ -24,16 +25,17 @@ interface CertificateGeneratorProps {
 export const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
   defaultStudentName = 'Nombre del Estudiante'
 }) => {
-  const [studentName, setStudentName] = useState(defaultStudentName);
-  const [studentId, setStudentId] = useState('C.C. 1.020.340.560');
+  const savedProgress = AcademyStorageService.getProgress();
+  const [studentName, setStudentName] = useState(savedProgress.studentName || defaultStudentName);
+  const [studentId, setStudentId] = useState(savedProgress.studentIdNumber || 'C.C. 1.020.340.560');
   const [selectedTrack, setSelectedTrack] = useState(CERTIFICATE_TRACKS[0]);
-  const [issueDate, setIssueDate] = useState(new Date().toLocaleDateString('es-CO', {
+  const [issueDate, setIssueDate] = useState(savedProgress.diplomaIssueDate || new Date().toLocaleDateString('es-CO', {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
   }));
-  const [serial, setSerial] = useState(`ACAD-EMR-${Math.floor(100000 + Math.random() * 900000)}`);
-  const [hours, setHours] = useState('80');
+  const [serial, setSerial] = useState(savedProgress.diplomaSerial || `ACAD-DIP-${Math.floor(100000 + Math.random() * 900000)}`);
+  const [hours, setHours] = useState('120');
   const [honorGrade, setHonorGrade] = useState('Aprobado con Mención de Honor y Excelencia');
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
   const [copied, setCopied] = useState(false);
@@ -49,14 +51,200 @@ export const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
         light: '#ffffff'
       }
     }).then(url => setQrCodeDataUrl(url)).catch(err => console.error(err));
-  }, [serial, studentName]);
+
+    // Save to storage
+    AcademyStorageService.saveProgress({
+      studentName,
+      studentIdNumber: studentId,
+      diplomaSerial: serial,
+      diplomaIssueDate: issueDate
+    });
+  }, [serial, studentName, studentId, issueDate]);
 
   const handlePrint = () => {
     window.print();
   };
 
   const handleRegenerateSerial = () => {
-    setSerial(`ACAD-EMR-${Math.floor(100000 + Math.random() * 900000)}`);
+    const newSerial = `ACAD-DIP-${Math.floor(100000 + Math.random() * 900000)}`;
+    setSerial(newSerial);
+  };
+
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/#certificado/${serial}?student=${encodeURIComponent(studentName)}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  const handleDownloadPNG = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1600;
+    canvas.height = 1130;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Background Parchment
+    ctx.fillStyle = '#fafaf9';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Dark Emerald Outer Border
+    ctx.strokeStyle = '#022c22';
+    ctx.lineWidth = 24;
+    ctx.strokeRect(12, 12, canvas.width - 24, canvas.height - 24);
+
+    // Inner Gold Border
+    ctx.strokeStyle = '#d97706';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(48, 48, canvas.width - 96, canvas.height - 96);
+
+    // Thin Inner Accent Border
+    ctx.strokeStyle = '#059669';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(58, 58, canvas.width - 116, canvas.height - 116);
+
+    // Corner Ornament Accents
+    ctx.fillStyle = '#d97706';
+    const corners = [
+      [58, 58],
+      [canvas.width - 58, 58],
+      [58, canvas.height - 58],
+      [canvas.width - 58, canvas.height - 58]
+    ];
+    corners.forEach(([x, y]) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 12, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Header Text
+    ctx.fillStyle = '#022c22';
+    ctx.font = 'bold 36px "Cinzel", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ACADEMIA ESMERALDERA JAIRRESTAURA', canvas.width / 2, 140);
+
+    ctx.fillStyle = '#b45309';
+    ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+    ctx.letterSpacing = '2px';
+    ctx.fillText('CENTRO NACIONAL DE FORMACIÓN GEMOLÓGICA & CULTURA DE LA ESMERALDA COLOMBIANA', canvas.width / 2, 175);
+
+    ctx.fillStyle = '#475569';
+    ctx.font = '14px "Cinzel", Georgia, serif';
+    ctx.fillText('— CERTIFICADO OFICIAL DE ACREDITACIÓN ACADÉMICA —', canvas.width / 2, 220);
+
+    ctx.font = 'italic 18px Georgia, serif';
+    ctx.fillStyle = '#334155';
+    ctx.fillText('Por cuanto ha completado satisfactoriamente los módulos teóricos y prácticos, se otorga a:', canvas.width / 2, 290);
+
+    // Student Name
+    ctx.fillStyle = '#022c22';
+    ctx.font = 'bold 44px "Cinzel", Georgia, serif';
+    ctx.fillText(studentName.toUpperCase() || 'NOMBRE DEL ESTUDIANTE', canvas.width / 2, 380);
+
+    ctx.strokeStyle = '#047857';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2 - 300, 405);
+    ctx.lineTo(canvas.width / 2 + 300, 405);
+    ctx.stroke();
+
+    ctx.fillStyle = '#475569';
+    ctx.font = '16px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText(`Documento de Identificación: ${studentId || 'No registrado'}`, canvas.width / 2, 435);
+
+    ctx.font = 'italic 18px Georgia, serif';
+    ctx.fillStyle = '#334155';
+    ctx.fillText('Por haber acreditado con honores y rigor gemológico el programa formativo de:', canvas.width / 2, 500);
+
+    // Track Box
+    ctx.fillStyle = '#022c22';
+    ctx.beginPath();
+    ctx.roundRect(canvas.width / 2 - 420, 530, 840, 75, 12);
+    ctx.fill();
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = '#fef3c7';
+    ctx.font = 'bold 22px "Cinzel", Georgia, serif';
+    ctx.fillText(selectedTrack, canvas.width / 2, 575);
+
+    ctx.fillStyle = '#6ee7b7';
+    ctx.font = '14px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText(`Intensidad: ${hours} horas académicas • ${honorGrade}`, canvas.width / 2, 630);
+
+    // Curricular summary
+    ctx.fillStyle = '#475569';
+    ctx.font = '13px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Acreditando competencias en génesis hidrotermal, inclusiones trifásicas diagnósticas (halita/salmuera/CO2),', canvas.width / 2, 680);
+    ctx.fillText('espectroscopía de tratamientos con aceite de cedro natural vs resinas, talla esmeralda con chaflanes y RUCOM formal.', canvas.width / 2, 705);
+
+    // Signatures and QR Code
+    const renderFooter = () => {
+      // Left Signature
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(200, 920);
+      ctx.lineTo(440, 920);
+      ctx.stroke();
+
+      ctx.fillStyle = '#022c22';
+      ctx.font = 'italic bold 22px Georgia, serif';
+      ctx.fillText('Jair Restaura', 320, 905);
+      ctx.font = 'bold 15px "Cinzel", serif';
+      ctx.fillText('Jair Restaura', 320, 945);
+      ctx.fillStyle = '#64748b';
+      ctx.font = '12px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Director General & Consultor Gemológico', 320, 968);
+      ctx.fillText('Academia Esmeraldera Jairrestaura', 320, 988);
+
+      // Right Signature
+      ctx.beginPath();
+      ctx.moveTo(1160, 920);
+      ctx.lineTo(1400, 920);
+      ctx.stroke();
+
+      ctx.fillStyle = '#022c22';
+      ctx.font = 'italic bold 22px Georgia, serif';
+      ctx.fillText('Comité Académico', 1280, 905);
+      ctx.font = 'bold 15px "Cinzel", serif';
+      ctx.fillText('Comité Académico Gemológico', 1280, 945);
+      ctx.fillStyle = '#64748b';
+      ctx.font = '12px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Área de Cristalografía & Tallas', 1280, 968);
+      ctx.fillText(`Bogotá D.C. • ${issueDate}`, 1280, 988);
+
+      // Center Serial and Verification
+      ctx.fillStyle = '#022c22';
+      ctx.font = 'bold 13px monospace';
+      ctx.fillText(`REGISTRO: ${serial}`, canvas.width / 2, 970);
+      ctx.fillStyle = '#64748b';
+      ctx.font = '11px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Verificación Digital Inmediata', canvas.width / 2, 990);
+
+      // Bottom Note
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Certificado emitido por ESMERALDA INTELIGENTE JAIRRESTAURA con fines de fomento y excelencia técnica.', canvas.width / 2, 1060);
+
+      // Trigger download
+      const link = document.createElement('a');
+      link.download = `Certificado_Jairrestaura_${serial}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    };
+
+    if (qrCodeDataUrl) {
+      const qrImg = new Image();
+      qrImg.onload = () => {
+        ctx.drawImage(qrImg, canvas.width / 2 - 50, 830, 100, 100);
+        renderFooter();
+      };
+      qrImg.src = qrCodeDataUrl;
+    } else {
+      renderFooter();
+    }
   };
 
   return (
@@ -71,17 +259,36 @@ export const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
               Editor del Certificado de Acreditación Estudiantil
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
-              Personaliza tus datos personales y programa formativo. El certificado se genera en tiempo real listo para descargar o imprimir en PDF.
+              Personaliza tus datos personales y programa formativo. Compatible con Vercel, móviles y computadores.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleCopyLink}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl transition-all"
+              title="Copiar enlace público de verificación"
+            >
+              {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5 text-amber-400" />}
+              <span>{copied ? 'Enlace Copiado' : 'Compartir'}</span>
+            </button>
+
+            <button
+              onClick={handleDownloadPNG}
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl shadow-md transition-all active:scale-95"
+              title="Descargar imagen digital en alta definición"
+            >
+              <Download className="w-4 h-4" />
+              <span>Descargar Imagen HD</span>
+            </button>
+
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 px-4 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-900/50 transition-all active:scale-95"
+              className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-900/50 transition-all active:scale-95"
+              title="Descargar PDF o imprimir en tamaño apaisado"
             >
               <Printer className="w-4 h-4" />
-              <span>Descargar PDF / Imprimir</span>
+              <span>Descargar PDF</span>
             </button>
           </div>
         </div>
