@@ -22,7 +22,7 @@ import { EmeraldAcademy } from './components/academy/EmeraldAcademy';
 import { SectorDirectory } from './components/directory/SectorDirectory';
 
 export default function App() {
-  const [currentTab, setCurrentTab] = useState<string>('inicio');
+  const [currentTab, setCurrentTab] = useState<string>('academia');
   
   // Data state
   const [emeralds, setEmeralds] = useState<EmeraldStone[]>([]);

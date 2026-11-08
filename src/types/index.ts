@@ -200,3 +200,50 @@ export interface AssistantMessage {
   timestamp: string;
   source?: string;
 }
+
+export interface ExternalReferenceLink {
+  title: string;
+  url: string;
+  institution: string;
+  description: string;
+  category: string;
+}
+
+export interface AcademyLesson {
+  id: string;
+  category: string;
+  title: string;
+  readTime: string;
+  difficulty: 'Iniciación' | 'Intermedio' | 'Avanzado' | 'Especialista';
+  summary: string;
+  heroImage: string;
+  content: string;
+  gallery: { url: string; caption: string }[];
+  keyTakeaways: string[];
+  externalLinks: ExternalReferenceLink[];
+}
+
+export interface VisualCatalogItem {
+  id: string;
+  category: 'yacimientos' | 'inclusiones' | 'tallas' | 'tratamientos' | 'certificados';
+  title: string;
+  subtitle: string;
+  originOrType: string;
+  description: string;
+  imageUrl: string;
+  specs: { label: string; value: string }[];
+  externalReference?: ExternalReferenceLink;
+}
+
+export interface StudentCertificate {
+  studentName: string;
+  studentIdNumber: string;
+  trackName: string;
+  issueDate: string;
+  certificateSerial: string;
+  instructorName: string;
+  instructorTitle: string;
+  hoursCompleted: number;
+  grade: string;
+  verificationUrl?: string;
+}

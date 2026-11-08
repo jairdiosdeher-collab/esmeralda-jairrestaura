@@ -43,11 +43,17 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* Print Styles for Printable Digital Passport, Quotes, and Work Orders */
+/* Print Styles for Printable Digital Passport, Quotes, and Academic Certificates */
 @media print {
+  @page {
+    size: auto;
+    margin: 8mm;
+  }
   body {
     background: #ffffff !important;
     color: #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
   .no-print {
     display: none !important;

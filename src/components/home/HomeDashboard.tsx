@@ -65,6 +65,16 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
 
   const modules = [
     {
+      id: 'academia',
+      title: 'Academia Esmeraldera & Diploma PDF',
+      description: 'Lecciones científicas, atlas de inclusiones, fuentes oficiales (CDTEC, GIA) y Certificado oficial editable para estudiantes.',
+      icon: GraduationCap,
+      stat: '7 lecciones + Diploma PDF',
+      color: 'from-amber-950/60 via-emerald-950/70 to-slate-950',
+      border: 'border-amber-500/70',
+      badge: 'Destacado #1 • Diploma PDF'
+    },
+    {
       id: 'inventario',
       title: 'Inventario Inteligente',
       description: 'Registro de gemas, dimensiones, colores, certificados y archivo digital seguro.',
@@ -125,16 +135,6 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
       badge: 'IA Gemológica'
     },
     {
-      id: 'academia',
-      title: 'Academia Esmeraldera',
-      description: 'Biblioteca interactiva sobre geología de Boyacá, inclusiones trifásicas y glosario.',
-      icon: GraduationCap,
-      stat: 'Guías y Cuestionarios',
-      color: 'from-purple-950/40 to-slate-950',
-      border: 'border-purple-900/50',
-      badge: 'Formación Gratuita'
-    },
-    {
       id: 'directorio',
       title: 'Directorio del Sector',
       description: 'Red nacional de comerciantes, talleres, gemólogos, joyeros y mineros formalizados.',
@@ -184,8 +184,17 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
           {/* Quick Hero Actions */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <button
+              onClick={() => onSelectTab('academia')}
+              className="flex items-center gap-2 px-5 py-3 text-xs sm:text-sm font-black bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-xl shadow-xl shadow-amber-950/60 transition-all active:scale-95 border border-amber-300"
+            >
+              <Award className="w-4 h-4 text-slate-950" />
+              <span>Academia & Diploma PDF</span>
+              <span className="w-2 h-2 rounded-full bg-slate-950 inline-block animate-ping"></span>
+            </button>
+
+            <button
               onClick={onNewEmerald}
-              className="flex items-center gap-2 px-5 py-3 text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-900/60 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-900/60 transition-all active:scale-95"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Registrar Esmeralda</span>
@@ -193,9 +202,9 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
 
             <button
               onClick={() => onSelectTab('inventario')}
-              className="flex items-center gap-2 px-5 py-3 text-xs sm:text-sm font-semibold bg-slate-900/80 hover:bg-slate-900 text-slate-200 border border-slate-700 hover:border-emerald-600 rounded-xl transition-all"
+              className="flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold bg-slate-900/80 hover:bg-slate-900 text-slate-200 border border-slate-700 hover:border-emerald-600 rounded-xl transition-all"
             >
-              <span>Ver Inventario Completo</span>
+              <span>Ver Inventario</span>
               <ArrowRight className="w-4 h-4 text-emerald-400" />
             </button>
           </div>

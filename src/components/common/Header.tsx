@@ -58,6 +58,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const navItems = [
+    { id: 'academia', label: 'Academia & Diploma PDF', icon: GraduationCap, highlight: true },
     { id: 'inicio', label: 'Inicio', icon: Gem },
     { id: 'inventario', label: 'Inventario', icon: Gem },
     { id: 'pasaporte', label: 'Pasaporte QR', icon: QrCode },
@@ -65,7 +66,6 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'comercio', label: 'Comercio', icon: Briefcase },
     { id: 'taller', label: 'Taller & Talla', icon: Hammer },
     { id: 'ai', label: 'Asistentes IA', icon: Bot },
-    { id: 'academia', label: 'Academia', icon: GraduationCap },
     { id: 'directorio', label: 'Directorio', icon: BookOpen },
   ];
 
@@ -133,6 +133,26 @@ export const Header: React.FC<HeaderProps> = ({
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = currentTab === item.id;
+                const isHighlight = (item as any).highlight;
+
+                if (isHighlight) {
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => onSelectTab(item.id)}
+                      className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-md ${
+                        active
+                          ? 'bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 border border-amber-300 ring-2 ring-amber-400/40'
+                          : 'bg-amber-950/40 text-amber-300 border border-amber-500/60 hover:bg-amber-900/50'
+                      }`}
+                    >
+                      <Icon className={`w-3.5 h-3.5 ${active ? 'text-slate-950' : 'text-amber-400'}`} />
+                      <span>{item.label}</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                    </button>
+                  );
+                }
+
                 return (
                   <button
                     key={item.id}
