@@ -26,6 +26,7 @@ export const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
   defaultStudentName = 'Nombre del Estudiante'
 }) => {
   const savedProgress = AcademyStorageService.getProgress();
+  const effectiveHours = savedProgress.effectiveHoursCompleted || 0;
   const [studentName, setStudentName] = useState(savedProgress.studentName || defaultStudentName);
   const [studentId, setStudentId] = useState(savedProgress.studentIdNumber || 'C.C. 1.020.340.560');
   const [selectedTrack, setSelectedTrack] = useState(CERTIFICATE_TRACKS[0]);
@@ -35,7 +36,7 @@ export const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
     year: 'numeric'
   }));
   const [serial, setSerial] = useState(savedProgress.diplomaSerial || `ACAD-DIP-${Math.floor(100000 + Math.random() * 900000)}`);
-  const [hours, setHours] = useState('120');
+  const [hours, setHours] = useState(effectiveHours > 0 ? String(effectiveHours) : '120');
   const [honorGrade, setHonorGrade] = useState('Aprobado con Mención de Honor y Excelencia');
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
   const [copied, setCopied] = useState(false);
@@ -171,7 +172,7 @@ export const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
 
     ctx.fillStyle = '#6ee7b7';
     ctx.font = '14px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText(`Intensidad: ${hours} horas académicas • ${honorGrade}`, canvas.width / 2, 630);
+    ctx.fillText(`Intensidad: ${hours} horas académicas acreditadas (Programa de 120H) • ${honorGrade}`, canvas.width / 2, 630);
 
     // Curricular summary
     ctx.fillStyle = '#475569';
@@ -223,10 +224,10 @@ export const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
       ctx.font = '11px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('Verificación Digital Inmediata', canvas.width / 2, 990);
 
-      // Bottom Note
+      // Bottom Note with Non-university legal disclaimer
       ctx.fillStyle = '#94a3b8';
       ctx.font = '11px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('Certificado emitido por ESMERALDA INTELIGENTE JAIRRESTAURA con fines de fomento y excelencia técnica.', canvas.width / 2, 1060);
+      ctx.fillText('Certificado de educación técnica libre y formación continua emitida por ESMERALDA INTELIGENTE JAIRRESTAURA (No conducente a título profesional universitario formal).', canvas.width / 2, 1060);
 
       // Trigger download
       const link = document.createElement('a');
@@ -443,7 +444,7 @@ export const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
                   {selectedTrack}
                 </h3>
                 <p className="text-[11px] text-emerald-200 mt-0.5">
-                  Intensidad: {hours} horas académicas • {honorGrade}
+                  Intensidad: {hours} horas académicas acreditadas (Programa Completo de 120H) • {honorGrade}
                 </p>
               </div>
 
@@ -498,7 +499,7 @@ export const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
 
             {/* Bottom Disclaimer */}
             <div className="text-center mt-6 pt-3 border-t border-slate-200 text-[8px] text-slate-500">
-              Certificado emitido por ESMERALDA INTELIGENTE JAIRRESTAURA con fines de fomento formativo, reconocimiento del saber tradicional y excelencia del gremio esmeraldero colombiano.
+              Certificado emitido por ESMERALDA INTELIGENTE JAIRRESTAURA con fines de educación técnica libre, fomento formativo y excelencia gemológica (No constituye título profesional universitario formal con tarjeta profesional de educación superior).
             </div>
 
           </div>

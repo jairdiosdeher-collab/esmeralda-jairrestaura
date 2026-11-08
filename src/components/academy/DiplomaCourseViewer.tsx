@@ -391,6 +391,31 @@ export const DiplomaCourseViewer: React.FC<DiplomaCourseViewerProps> = ({
                 </div>
               )}
 
+              {/* Lesson Scientific Image / Diagram with explicit imageType Badge */}
+              {activeLesson.diagramUrl && (
+                <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 group">
+                  <img
+                    src={activeLesson.diagramUrl}
+                    alt={activeLesson.diagramCaption || activeLesson.title}
+                    className="w-full h-56 sm:h-72 object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+                  <div className="absolute top-3 left-3">
+                    <span className="px-3 py-1 rounded-full bg-slate-950/85 backdrop-blur-md border border-emerald-500/50 text-emerald-300 text-[10px] font-black uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+                      <Sparkles className="w-3 h-3 text-emerald-400" />
+                      {activeLesson.diagramType || 'Registro Fotográfico Científico'}
+                    </span>
+                  </div>
+                  {activeLesson.diagramCaption && (
+                    <div className="absolute bottom-3 left-3 right-3 text-[11px] text-slate-300 bg-slate-950/85 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-800/80">
+                      <span className="font-bold text-amber-400">Figura Científica: </span>
+                      {activeLesson.diagramCaption}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Lesson Text Body */}
               <div className="prose prose-invert max-w-none text-slate-200 space-y-4 text-xs sm:text-sm leading-relaxed">
                 {activeLesson.content.split('\n\n').map((paragraph, idx) => {

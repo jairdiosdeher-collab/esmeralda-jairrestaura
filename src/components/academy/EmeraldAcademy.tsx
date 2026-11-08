@@ -25,11 +25,12 @@ import { AtlasViewer } from './AtlasViewer';
 import { GlossaryViewer } from './GlossaryViewer';
 import { CertificateGenerator } from './CertificateGenerator';
 import { CertificateValidator } from './CertificateValidator';
+import { FinalExamSimulator } from './FinalExamSimulator';
 import { AcademyStorageService } from '../../services/academyStorage';
 import { StudentProgress } from '../../types/academy';
 
 export const EmeraldAcademy: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'diplomado' | 'atlas' | 'glosario' | 'certificado' | 'verificar' | 'biblioteca'>('diplomado');
+  const [activeTab, setActiveTab] = useState<'diplomado' | 'examen_final' | 'atlas' | 'glosario' | 'certificado' | 'verificar' | 'biblioteca'>('diplomado');
   const [progress, setProgress] = useState<StudentProgress>(AcademyStorageService.getProgress());
   const [importNotification, setImportNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -283,6 +284,18 @@ export const EmeraldAcademy: React.FC = () => {
         </button>
 
         <button
+          onClick={() => setActiveTab('examen_final')}
+          className={`px-4 py-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 flex items-center gap-1.5 whitespace-nowrap ${
+            activeTab === 'examen_final'
+              ? 'border-amber-400 text-amber-300 bg-amber-950/30 font-extrabold'
+              : 'border-transparent text-amber-400/80 hover:text-amber-300'
+          }`}
+        >
+          <Award className="w-4 h-4 text-amber-400" />
+          <span>Examen Final (50 Preguntas)</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab('atlas')}
           className={`px-4 py-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 flex items-center gap-1.5 whitespace-nowrap ${
             activeTab === 'atlas'
@@ -347,6 +360,14 @@ export const EmeraldAcademy: React.FC = () => {
       {activeTab === 'diplomado' && (
         <DiplomaCourseViewer
           onRequestCertificate={() => setActiveTab('certificado')}
+        />
+      )}
+
+      {/* Tab: Final Exam Simulator (50 Questions) */}
+      {activeTab === 'examen_final' && (
+        <FinalExamSimulator
+          onExamPassed={() => setProgress(AcademyStorageService.getProgress())}
+          onNavigateToCertificate={() => setActiveTab('certificado')}
         />
       )}
 

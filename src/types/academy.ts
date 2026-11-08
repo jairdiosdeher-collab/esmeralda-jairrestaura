@@ -1,21 +1,34 @@
 /**
  * ESMERALDA INTELIGENTE JAIRRESTAURA
  * Tipos de datos para la Academia Esmeraldera y el Diplomado de 120 Horas
+ * Auditoría Científica & Consolidación Curricular
  */
 
 import { ExternalReferenceLink } from './index';
 
 export type AcademicDifficulty = 'Iniciación' | 'Intermedio' | 'Avanzado' | 'Especialista';
 
+export type GemologicalImageType = 
+  | 'Microfotografía Gemológica'
+  | 'Diagrama Petrográfico'
+  | 'Fotografía de Cristal en Matriz'
+  | 'Instrumental Óptico'
+  | 'Corte Lapidario'
+  | 'Espectro Óptico / FTIR'
+  | 'Ilustración Técnica Vectorial'
+  | 'Mapa de Yacimiento';
+
 export interface QuizQuestion {
   id: string;
   question: string;
   type: 'multiple_choice' | 'true_false' | 'image_interpretation';
   imageUrl?: string;
+  imageType?: GemologicalImageType;
   options: string[];
-  correctAnswer: number; // Index in options
+  correctAnswer: number; // Index in options (0-based)
   explanation: string;
   scientificContext?: string;
+  scientificReference?: string;
 }
 
 export interface ModuleLesson {
@@ -30,8 +43,22 @@ export interface ModuleLesson {
   keyTakeaways: string[];
   scientificFormula?: string;
   diagramUrl?: string;
+  diagramType?: GemologicalImageType;
   diagramCaption?: string;
-  gallery?: { url: string; caption: string; credit?: string }[];
+  svgTechnicalDiagram?: string; // Key or SVG code for interactive/crisp vector diagram
+  gallery?: { 
+    url: string; 
+    caption: string; 
+    credit?: string; 
+    imageType?: GemologicalImageType;
+  }[];
+  references?: {
+    author: string;
+    year: string;
+    title: string;
+    publication: string;
+    url?: string;
+  }[];
 }
 
 export interface CaseStudy {
@@ -61,12 +88,24 @@ export interface DiplomaModule {
   learningObjectives: string[];
   prerequisites: string[];
   heroImage: string;
+  heroImageType?: GemologicalImageType;
   lessons: ModuleLesson[];
   caseStudy: CaseStudy;
   practicalActivity: PracticalActivity;
   quiz: QuizQuestion[];
   externalReferences: ExternalReferenceLink[];
   bibliography: { author: string; year: string; title: string; publication: string; doiOrUrl?: string }[];
+}
+
+export interface FinalExamQuestion {
+  id: string;
+  moduleCode: string; // MOD-01 to MOD-12
+  category: string;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+  scientificReference: string;
 }
 
 export interface GlossaryTerm {
@@ -99,6 +138,7 @@ export interface ScientificAtlasItem {
   gemologicalSignificance: string;
   diagnosticCaveat: string; // Crucial: explicitly indicates diagnostic limitations
   imageUrl: string;
+  imageType?: GemologicalImageType;
   magnification?: string;
   illuminationType?: string;
   sourceCredit: string;
@@ -112,6 +152,10 @@ export interface StudentProgress {
   moduleScores: Record<number, number>; // moduleId -> score (0 to 100)
   favoriteLessonIds: string[];
   finalExamScore?: number;
+  finalExamPassed?: boolean;
+  finalExamDate?: string;
+  finalExamAnswers?: Record<string, number>;
+  effectiveHoursCompleted: number; // Real tracked hours (10h per approved module >= 80)
   diplomaSerial?: string;
   diplomaIssueDate?: string;
   lastUpdated: string;

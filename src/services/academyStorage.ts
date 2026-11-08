@@ -9,6 +9,10 @@ const DEFAULT_PROGRESS: StudentProgress = {
   moduleScores: {},
   favoriteLessonIds: [],
   finalExamScore: undefined,
+  finalExamPassed: false,
+  finalExamDate: undefined,
+  finalExamAnswers: {},
+  effectiveHoursCompleted: 0,
   diplomaSerial: undefined,
   diplomaIssueDate: undefined,
   lastUpdated: new Date().toISOString()
@@ -21,7 +25,15 @@ export class AcademyStorageService {
       if (!data) {
         return DEFAULT_PROGRESS;
       }
-      return { ...DEFAULT_PROGRESS, ...JSON.parse(data) };
+      const parsed = JSON.parse(data);
+      const passedModulesCount = Object.values(parsed.moduleScores || {}).filter((s: any) => Number(s) >= 80).length;
+      const effectiveHours = Math.min(120, passedModulesCount * 10);
+
+      return { 
+        ...DEFAULT_PROGRESS, 
+        ...parsed,
+        effectiveHoursCompleted: effectiveHours 
+      };
     } catch (e) {
       console.error('Error reading student progress', e);
       return DEFAULT_PROGRESS;
@@ -31,9 +43,14 @@ export class AcademyStorageService {
   static saveProgress(progress: Partial<StudentProgress>): StudentProgress {
     try {
       const current = this.getProgress();
+      const newModuleScores = progress.moduleScores !== undefined ? progress.moduleScores : current.moduleScores;
+      const passedModulesCount = Object.values(newModuleScores || {}).filter((s: any) => Number(s) >= 80).length;
+      const effectiveHours = Math.min(120, passedModulesCount * 10);
+
       const updated: StudentProgress = {
         ...current,
         ...progress,
+        effectiveHoursCompleted: effectiveHours,
         lastUpdated: new Date().toISOString()
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
@@ -85,42 +102,54 @@ export class AcademyStorageService {
     return this.saveProgress({ moduleScores: newScores });
   }
 
-  static recordFinalExamScore(score: number, serial: string): StudentProgress {
+  static recordFinalExamScore(score: number, passed: boolean, answers?: Record<string, number>, serial?: string): StudentProgress {
+    const current = this.getProgress();
+    const generatedSerial = serial || current.diplomaSerial || `ACAD-DIP-${Math.floor(100000 + Math.random() * 900000)}`;
+    const issueDate = new Date().toLocaleDateString('es-CO', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+
     return this.saveProgress({
-      finalExamScore: score,
-      diplomaSerial: serial,
-      diplomaIssueDate: new Date().toLocaleDateString('es-CO', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      })
+      finalExamScore: Math.max(current.finalExamScore || 0, score),
+      finalExamPassed: current.finalExamPassed || passed,
+      finalExamDate: issueDate,
+      finalExamAnswers: answers || current.finalExamAnswers,
+      diplomaSerial: passed ? generatedSerial : current.diplomaSerial,
+      diplomaIssueDate: passed ? issueDate : current.diplomaIssueDate
     });
   }
 
-  static calculateOverallProgress(totalLessonsCount = 48): {
+  static calculateOverallProgress(totalLessonsCount = 72): {
     percentage: number;
     completedLessons: number;
     passedModules: number;
+    effectiveHours: number;
     averageScore: number;
     isEligibleForDiploma: boolean;
+    finalExamPassed: boolean;
   } {
     const current = this.getProgress();
     const completedLessons = current.completedLessonIds.length;
     const percentage = Math.min(100, Math.round((completedLessons / Math.max(1, totalLessonsCount)) * 100));
     
     const passedModules = Object.values(current.moduleScores).filter(s => s >= 80).length;
+    const effectiveHours = Math.min(120, passedModules * 10);
     const scores = Object.values(current.moduleScores);
     const averageScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
     
-    // Eligible for diploma if completed at least 80% of lessons or passed 10+ modules with >= 80
-    const isEligibleForDiploma = passedModules >= 10 || percentage >= 80;
+    // Eligible for full diploma if 12 modules passed with >= 80 and/or final exam passed with >= 80
+    const isEligibleForDiploma = (passedModules >= 10 || current.finalExamPassed === true);
 
     return {
       percentage,
       completedLessons,
       passedModules,
+      effectiveHours,
       averageScore,
-      isEligibleForDiploma
+      isEligibleForDiploma,
+      finalExamPassed: !!current.finalExamPassed
     };
   }
 
@@ -128,7 +157,9 @@ export class AcademyStorageService {
     const current = this.getProgress();
     const payload = {
       platform: 'ESMERALDA INTELIGENTE JAIRRESTAURA — ACADEMIA',
-      program: 'DIPLOMADO EN GEMOLOGÍA, GEOLOGÍA, TALLA Y COMERCIO (120 HORAS)',
+      program: 'DIPLOMADO EN GEMOLOGÍA, GEOLOGÍA, IDENTIFICACIÓN, TALLA Y COMERCIALIZACIÓN DE LA ESMERALDA COLOMBIANA',
+      academicHoursProgrammed: 120,
+      effectiveHoursCompleted: current.effectiveHoursCompleted,
       exportedAt: new Date().toISOString(),
       studentProgress: current
     };
@@ -160,6 +191,9 @@ export class AcademyStorageService {
           moduleScores: typeof progress.moduleScores === 'object' ? progress.moduleScores : {},
           favoriteLessonIds: Array.isArray(progress.favoriteLessonIds) ? progress.favoriteLessonIds : [],
           finalExamScore: progress.finalExamScore,
+          finalExamPassed: progress.finalExamPassed,
+          finalExamDate: progress.finalExamDate,
+          finalExamAnswers: progress.finalExamAnswers || {},
           diplomaSerial: progress.diplomaSerial,
           diplomaIssueDate: progress.diplomaIssueDate
         });
