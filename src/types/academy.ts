@@ -18,7 +18,8 @@ export type GemologicalImageType =
   | 'Ilustración Técnica Vectorial'
   | 'Esquema Cristalográfico Vectorial'
   | 'Mapa de Yacimiento'
-  | 'Fotografía de Yacimiento Minero';
+  | 'Fotografía de Yacimiento Minero'
+  | 'Diagrama Vectorial Estandarizado';
 
 export type ImageVerificationStatus = 'Verificada Científicamente' | 'Esquema Educativo Validador' | 'Imagen científica pendiente de verificación';
 
@@ -47,6 +48,17 @@ export interface VisualControlCard {
   altText: string;
 }
 
+export interface ScientificValidationAudit {
+  matchesTitle: boolean;
+  representsConcept: boolean;
+  isScientificallyAccurate: boolean;
+  directEmeraldRelation: boolean;
+  captionMatchesVisual: boolean;
+  provenanceDocumented: boolean;
+  score: number; // e.g. 6 (out of 6)
+  status: 'Aprobado 100%' | 'Observación' | 'Rechazado';
+}
+
 export interface ModuleLesson {
   id: string;
   moduleId: number;
@@ -69,6 +81,7 @@ export interface ModuleLesson {
   isRealPhoto?: boolean; // true: Fotografía real de microscopio/campo; false: Ilustración técnica
   verificationStatus?: ImageVerificationStatus;
   visualControlCard?: VisualControlCard;
+  validationAudit?: ScientificValidationAudit;
   gallery?: { 
     url: string; 
     caption: string; 

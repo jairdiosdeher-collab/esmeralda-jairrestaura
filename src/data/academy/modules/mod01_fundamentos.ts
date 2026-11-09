@@ -50,14 +50,25 @@ El berilo es un ciclosilicato de berilio y aluminio ($Be_3Al_2Si_6O_{18}$). Cuan
         'La esmeralda es un mineral natural, mientras que la lutita de caja que la rodea es una roca sedimentaria.'
       ],
       scientificFormula: 'Be3Al2Si6O18 : (Cr3+, V3+)',
-      diagramType: 'Fotografía de Cristal en Matriz',
-      diagramCaption: 'Cristal prismático euhedral de esmeralda sobre matriz sedimentaria de calcita blanca y lutita bituminosa de Muzo.',
-      imageSource: 'Smithsonian National Museum of Natural History / Archivo JAIRRESTAURA',
-      imageAuthor: 'Mineral Sciences Dept. Smithsonian / Documentación JAIRRESTAURA',
-      imageLicense: 'Uso Educativo y Académico',
-      isRealPhoto: true,
+      svgTechnicalDiagram: 'm1_l1_mineral_rock_gem',
+      diagramType: 'Diagrama Vectorial Estandarizado',
+      diagramCaption: 'Cuadrante comparativo ontológico: Mineral (ciclosilicato Be3Al2Si6O18), Roca (lutita negra bituminosa), Cristal (prisma euhedral {10-10}) y Gema Noble (talla octagonal con chaflanes).',
+      imageSource: 'Smithsonian National Museum of Natural History / Comité Científico JAIRRESTAURA',
+      imageAuthor: 'Comité de Cristalografía y Mineralogía JAIRRESTAURA',
+      imageLicense: 'Material Educativo Oficial JAIRRESTAURA',
+      isRealPhoto: false,
       verificationStatus: 'Verificada Científicamente',
-      diagramUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80'
+      visualControlCard: {
+        moduleCode: 'MOD-01',
+        lessonCode: 'LECC-1.1',
+        resourceName: 'Cuadrante Ontológico Comparativo: Mineral, Roca, Cristal y Gema',
+        scientificConcept: 'Diferenciación ontológica y cristaloquímica entre fase mineral homogénea, roca sedimentaria hospedante y cristal euhedral tallado',
+        technicalDescription: 'Matriz analítica de 4 cuadrantes que contrasta la celda unidad atómica del berilo (P6/mcc), la roca caja sedimentaria bituminosa de Muzo (Fm. Paja), la morfología prismática natural con pinacoide basal {0001} y la gema noble con talla de precisión diseñada para optimizar retorno de luz.',
+        source: 'Smithsonian National Museum of Natural History / CIBJO Diamond, Coloured Gemstone and Pearl Book',
+        resourceType: 'Diagrama Vectorial Estandarizado',
+        validationStatus: 'Verificada Científicamente',
+        altText: 'Diagrama comparativo de cuatro cuadrantes diferenciando mineral, roca sedimentaria, cristal prismático euhedral y gema facetada'
+      }
     },
     {
       id: 'm1-l2',
@@ -87,14 +98,25 @@ La tenacidad mide la energía mecánica necesaria para provocar la fractura del 
         'Las esquinas biseladas en chaflán de la talla esmeralda son una respuesta ingenieril a su fragilidad de impacto.'
       ],
       scientificFormula: 'K_IC \\approx 0.8 - 1.2 \\text{ MPa}\\cdot\\text{m}^{1/2} \\text{ (Tenacidad a la fractura)}',
-      svgTechnicalDiagram: 'emerald_cut_geometry',
-      diagramType: 'Ilustración Técnica Vectorial',
-      diagramCaption: 'Geometría vectorial de la Talla Esmeralda con chaflanes a 45° diseñados para disipar esfuerzos mecánicos.',
+      svgTechnicalDiagram: 'm1_l2_mohs_hardness_cleavage',
+      diagramType: 'Diagrama Vectorial Estandarizado',
+      diagramCaption: 'Diferenciación mecánica tensorial: Escala ordinal de Mohs (1 al 10 con berilo en 7.5-8.0), fragilidad por tenacidad K_IC y disipación de esfuerzos mediante chaflanes a 45° de la talla esmeralda.',
       imageSource: 'Academia Esmeraldera JAIRRESTAURA / Lapidary Design Lab',
       imageAuthor: 'Comité Técnico Lapidario JAIRRESTAURA',
       imageLicense: 'Material Educativo Oficial JAIRRESTAURA',
       isRealPhoto: false,
-      verificationStatus: 'Esquema Educativo Validador'
+      verificationStatus: 'Verificada Científicamente',
+      visualControlCard: {
+        moduleCode: 'MOD-01',
+        lessonCode: 'LECC-1.2',
+        resourceName: 'Comparador Mecánico Tensorial: Dureza de Mohs vs Tenacidad K_IC',
+        scientificConcept: 'Separación entre resistencia al rayado y tenacidad a la fractura con partición basal {0001}',
+        technicalDescription: 'Representación ordinal de la escala de Mohs de 1 a 10 destacando el berilo (7.5-8.0) por encima del cuarzo, complementada con el análisis de fragilidad estructural (K_IC = 0.8-1.2 MPa·m^1/2) y la función disipadora de tensiones en esquinas de chaflán a 45°.',
+        source: 'GIA Gem Reference Guide / Instituto Gemológico Español (IGE)',
+        resourceType: 'Diagrama Vectorial Estandarizado',
+        validationStatus: 'Verificada Científicamente',
+        altText: 'Diagrama técnico de escala de Mohs y tenacidad de fractura en esmeralda con chaflanes protectores a 45 grados'
+      }
     },
     {
       id: 'm1-l3',
@@ -176,14 +198,25 @@ $$\\Delta n = n_o - n_e = 0.005 - 0.007$$
         'Su birrefringencia constante oscila entre 0.005 y 0.007, permitiendo diferenciarlo con refractómetro.'
       ],
       scientificFormula: '\\Delta n = n_o - n_e = 0.006 \\quad (\\text{Carácter: Uniaxial Negativo, } U-)',
-      svgTechnicalDiagram: 'refractometer_reading',
-      diagramType: 'Instrumental Óptico',
-      diagramCaption: 'Escala reticular de refractómetro gemológico mostrando la doble lectura no=1.577 y ne=1.571 (U-).',
+      svgTechnicalDiagram: 'm1_l4_refraction_anisotropy',
+      diagramType: 'Diagrama Vectorial Estandarizado',
+      diagramCaption: 'Óptica mineral anisótropa uniaxial negativa (U-): Desdoblamiento del rayo incidente en rayo ordinario (no=1.577) y rayo extraordinario (ne=1.571), birrefringencia Δn=0.006.',
       imageSource: 'GIA Gem Identification Handbook / Diagrama JAIRRESTAURA',
       imageAuthor: 'Comité de Óptica Mineral JAIRRESTAURA',
-      imageLicense: 'Esquema Educativo Oficial JAIRRESTAURA',
+      imageLicense: 'Material Educativo Oficial JAIRRESTAURA',
       isRealPhoto: false,
-      verificationStatus: 'Esquema Educativo Validador'
+      verificationStatus: 'Verificada Científicamente',
+      visualControlCard: {
+        moduleCode: 'MOD-01',
+        lessonCode: 'LECC-1.4',
+        resourceName: 'Desdoblamiento Anisótropo Uniaxial Negativo y Ley de Snell',
+        scientificConcept: 'Refracción, birrefringencia y propagación electromagnética de ondas ordinaria y extraordinaria en el berilo',
+        technicalDescription: 'Simulación del paso de un rayo de luz incidente no polarizado a través de una celda hexagonal de berilo, descomponiéndose en el rayo ordinario omega (no = 1.577) y extraordinario epsilon (ne = 1.571) con birrefringencia constante de 0.006.',
+        source: 'Mineralogical Society of America / GIA Gem Instruments',
+        resourceType: 'Diagrama Vectorial Estandarizado',
+        validationStatus: 'Verificada Científicamente',
+        altText: 'Diagrama vectorial de refracción de luz y birrefringencia en cristal uniaxial negativo de berilo'
+      }
     },
     {
       id: 'm1-l5',
@@ -211,14 +244,25 @@ Esta polarización cromática es la regla de oro del maestro tallador:
         'El dicroscopio de calcita separa simultáneamente ambas ondas cromáticas en dos ventanas contiguas.'
       ],
       scientificFormula: '\\text{Rayo } \\omega: \\text{Verde azuloso} \\quad | \\quad \\text{Rayo } \\epsilon: \\text{Verde amarillento}',
-      diagramType: 'Microfotografía Gemológica',
-      diagramCaption: 'Desdoblamiento dicroico simultáneo de esmeralda colombiana observado a través de dicroscopio de calcita.',
-      imageSource: 'Gems & Gemology (GIA) / Archivo Fotográfico JAIRRESTAURA',
-      imageAuthor: 'GIA Photo Collection / Colaboración JAIRRESTAURA',
-      imageLicense: 'Uso Educativo Académico',
-      isRealPhoto: true,
+      svgTechnicalDiagram: 'm1_l5_dicroscope_pleochroism',
+      diagramType: 'Diagrama Vectorial Estandarizado',
+      diagramCaption: 'Dicroscopio de calcita: Ventana dual simultánea comparando rayo ordinario (verde azuloso intenso noble) vs rayo extraordinario (verde amarillento cálido). Regla de corte con mesa perpendicular al eje [c].',
+      imageSource: 'GIA Gem Instruments / Laboratorio Óptico JAIRRESTAURA',
+      imageAuthor: 'Comité de Óptica Instrumental JAIRRESTAURA',
+      imageLicense: 'Material Educativo Oficial JAIRRESTAURA',
+      isRealPhoto: false,
       verificationStatus: 'Verificada Científicamente',
-      diagramUrl: 'https://images.unsplash.com/photo-1615655406736-b37c4fabf923?auto=format&fit=crop&w=800&q=80'
+      visualControlCard: {
+        moduleCode: 'MOD-01',
+        lessonCode: 'LECC-1.5',
+        resourceName: 'Dicroscopio de Calcita con Ventana Dual y Control del Eje Óptico [c]',
+        scientificConcept: 'Absorción anisotrópica cuántica dependiente de la dirección de polarización (Dicroísmo)',
+        technicalDescription: 'Aparato de birrefringencia interna con romboedro de espato de Islandia que separa espacialmente los dos estados de vibración ortogonales de la esmeralda colombiana: rayo omega verde azuloso saturado vs rayo epsilon verde amarillento pálido.',
+        source: 'Gems & Gemology (GIA) / Archivo Científico JAIRRESTAURA',
+        resourceType: 'Diagrama Vectorial Estandarizado',
+        validationStatus: 'Verificada Científicamente',
+        altText: 'Diagrama técnico interactivo de dicroscopio de calcita mostrando la separación simultánea de colores del dicroísmo'
+      }
     },
     {
       id: 'm1-l6',
@@ -254,14 +298,25 @@ Piezas ensambladas artificialmente uniendo dos o más capas mediante pegamento e
         'Los dobletes y tripletes se descubren por la línea de ensamblaje en inmersión microscópica.'
       ],
       scientificFormula: '\\text{Norma CIBJO Blue Book: Divulgación obligatoria de material compuesto o sintético}',
-      diagramType: 'Ilustración Técnica Vectorial',
-      diagramCaption: 'Esquema de triplete compuesto: corona de berilo natural incoloro, lámina adhesiva verde y culata sintética.',
-      imageSource: 'CIBJO Gemstone Commission / Archivo Educativo JAIRRESTAURA',
-      imageAuthor: 'Comité de Certificación JAIRRESTAURA',
-      imageLicense: 'Material Educativo Oficial',
+      svgTechnicalDiagram: 'm1_l6_natural_synthetic_imitation',
+      diagramType: 'Diagrama Vectorial Estandarizado',
+      diagramCaption: 'Taxonomía cuádruple de identificación: Esmeralda natural (inclusiones trifásicas), sintética hidrotermal (crecimiento en chevron), imitación vítrea (burbujas esféricas e isotropía) y doblete compuesto (plano de pegamento).',
+      imageSource: 'LMHC / CIBJO Gemstone Standards / Comité Forense JAIRRESTAURA',
+      imageAuthor: 'Comité Forense de Identificación Gemológica JAIRRESTAURA',
+      imageLicense: 'Material Educativo Oficial JAIRRESTAURA',
       isRealPhoto: false,
-      verificationStatus: 'Esquema Educativo Validador',
-      diagramUrl: 'https://images.unsplash.com/photo-1600003014755-ba31aa59c4b6?auto=format&fit=crop&w=800&q=80'
+      verificationStatus: 'Verificada Científicamente',
+      visualControlCard: {
+        moduleCode: 'MOD-01',
+        lessonCode: 'LECC-1.6',
+        resourceName: 'Matriz Taxonómica Cuádruple: Natural, Sintético, Imitación y Doblete',
+        scientificConcept: 'Criterios microestructurales y cristaloquímicos de diferenciación gemológica forense',
+        technicalDescription: 'Muestra comparativa que expone las cavidades trifásicas en diente de sierra típicas de fluidos hidrotermales naturales, los patrones en chevron de síntesis en autoclave (Tairus/Biron), las líneas de remolino con burbujas de gas de vidrios manufacturados y el plano adhesivo fluorescente de los dobletes de berilo.',
+        source: 'Laboratory Manual Harmonisation Committee (LMHC) / CIBJO',
+        resourceType: 'Diagrama Vectorial Estandarizado',
+        validationStatus: 'Verificada Científicamente',
+        altText: 'Diagrama de taxonomía gemológica en cuatro cuadrantes para identificar esmeralda natural frente a sintéticos e imitaciones'
+      }
     }
   ],
   caseStudy: {

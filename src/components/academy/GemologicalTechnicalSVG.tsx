@@ -1,4 +1,30 @@
 import React from 'react';
+import { 
+  DiagramM1L1, 
+  DiagramM1L2, 
+  DiagramM1L4, 
+  DiagramM1L5, 
+  DiagramM1L6 
+} from './diagrams/Module01Diagrams';
+import { 
+  DiagramM2L2, 
+  DiagramM2L3, 
+  DiagramM2L4, 
+  DiagramM3L2, 
+  DiagramM4L4 
+} from './diagrams/Module02to05Diagrams';
+import { 
+  DiagramM6L2, 
+  DiagramM7L1, 
+  DiagramM10L4, 
+  DiagramM11L2, 
+  DiagramM12L3,
+  DiagramM5L3,
+  DiagramM8L4,
+  DiagramM9L3,
+  DiagramM11L4,
+  DiagramM12L5
+} from './diagrams/Module06to12Diagrams';
 
 interface GemDiagramProps {
   type: string;
@@ -7,6 +33,16 @@ interface GemDiagramProps {
 
 export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, className = 'w-full h-64' }) => {
   switch (type) {
+    // MOD-01 Cases
+    case 'm1-l1':
+    case 'm1_l1_mineral_rock_gem':
+      return <DiagramM1L1 className={className} />;
+
+    case 'm1-l2':
+    case 'm1_l2_mohs_hardness_cleavage':
+      return <DiagramM1L2 className={className} />;
+
+    case 'm1-l3':
     case 'hydrostatic_balance':
       return (
         <svg viewBox="0 0 440 260" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -103,6 +139,37 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm1-l4':
+    case 'm1_l4_refraction_anisotropy':
+      return <DiagramM1L4 className={className} />;
+
+    case 'm1-l5':
+    case 'm1_l5_dicroscope_pleochroism':
+      return <DiagramM1L5 className={className} />;
+
+    case 'm1-l6':
+    case 'm1_l6_natural_synthetic_imitation':
+      return <DiagramM1L6 className={className} />;
+
+    // MOD-02 Cases
+    case 'm2-l2':
+    case 'm2_l2_thermobarometry':
+      return <DiagramM2L2 className={className} />;
+
+    case 'm2-l3':
+    case 'm2_l3_occidental_belt':
+      return <DiagramM2L3 className={className} />;
+
+    case 'm2-l4':
+    case 'm2_l4_oriental_belt':
+      return <DiagramM2L4 className={className} />;
+
+    case 'm2-l5':
+    case 'm2-l6':
+      return <DiagramM2L2 className={className} />;
+
+    // MOD-03 Cases
+    case 'm3-l1':
     case 'hexagonal_beryl':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -141,6 +208,36 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm3-l2':
+    case 'm3_l2_atomic_channels':
+      return <DiagramM3L2 className={className} />;
+
+    case 'm3-l3':
+      return <DiagramM4L4 className={className} />;
+
+    case 'm3-l5':
+      return <DiagramM1L2 className={className} />;
+
+    case 'm3-l6':
+      return <DiagramM2L4 className={className} />;
+
+    // MOD-04 Cases
+    case 'm4-l3':
+    case 'm4-l4':
+    case 'm4_l4_optical_spectroscope':
+      return <DiagramM4L4 className={className} />;
+
+    case 'm4-l5':
+      return <DiagramM1L5 className={className} />;
+
+    case 'm4-l6':
+      return <DiagramM1L4 className={className} />;
+
+    // MOD-05 Cases
+    case 'm5-l1':
+    case 'm4-l2':
+    case 'm5-l4':
+    case 'm5-l6':
     case 'three_phase_inclusion':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -191,6 +288,16 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm5-l2':
+      return <DiagramM2L4 className={className} />;
+
+    case 'm5-l3':
+      return <DiagramM5L3 className={className} />;
+
+    case 'm5-l5':
+      return <DiagramM1L6 className={className} />;
+
+    case 'm3-l4':
     case 'trapiche_structure':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -209,7 +316,7 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
             <line x1="0" y1="0" x2="-69" y2="40" stroke="#0f172a" strokeWidth="7" />
             <line x1="0" y1="0" x2="-69" y2="-40" stroke="#0f172a" strokeWidth="7" />
 
-            {/* Central Hexagonal Core {0001} */}
+            {/* Central Hexagonal Core (0001) */}
             <polygon points="0,-24 21,-12 21,12 0,24 -21,12 -21,-12" fill="#065f46" stroke="#fbbf24" strokeWidth="2" />
             <polygon points="0,-26 23,-13 23,13 0,26 -23,13 -23,-13" fill="none" stroke="#0f172a" strokeWidth="3" />
             
@@ -234,6 +341,9 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm6-l3':
+    case 'm8-l2':
+    case 'm8-l5':
     case 'emerald_cut_geometry':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -278,6 +388,7 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm4-l1':
     case 'refractometer_reading':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -328,6 +439,8 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm7-l3':
+    case 'm7-l4':
     case 'ftir_resin_spectra':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -379,6 +492,8 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm2-l1':
+    case 'm2-l5':
     case 'geological_cross_section':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -414,6 +529,8 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm6-l1':
+    case 'm6-l6':
     case 'gia_color_space':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -455,6 +572,8 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm8-l1':
+    case 'm8-l3':
     case 'lapidary_c_axis':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -499,6 +618,7 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm9-l2':
     case 'raman_spectrometry':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -541,6 +661,14 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
         </svg>
       );
 
+    case 'm9-l1':
+    case 'm9-l5':
+    case 'm9-l6':
+    case 'm10-l1':
+    case 'm11-l3':
+    case 'm12-l1':
+    case 'm12-l2':
+    case 'm12-l4':
     case 'traceability_chain':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -603,6 +731,65 @@ export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, class
           </g>
         </svg>
       );
+
+    // MOD-06 Cases
+    case 'm6-l2':
+      return <DiagramM6L2 className={className} />;
+
+    case 'm6-l4':
+      return <DiagramM10L4 className={className} />;
+
+    case 'm6-l5':
+      return <DiagramM2L3 className={className} />;
+
+    // MOD-07 Cases
+    case 'm7-l1':
+    case 'm7-l2':
+    case 'm7-l6':
+      return <DiagramM7L1 className={className} />;
+
+    case 'm7-l5':
+      return <DiagramM6L2 className={className} />;
+
+    // MOD-08 Cases
+    case 'm8-l4':
+      return <DiagramM8L4 className={className} />;
+
+    case 'm8-l6':
+      return <DiagramM12L3 className={className} />;
+
+    // MOD-09 Cases
+    case 'm9-l3':
+    case 'm9-l4':
+      return <DiagramM9L3 className={className} />;
+
+    // MOD-10 Cases
+    case 'm10-l2':
+    case 'm10-l3':
+    case 'm10-l4':
+    case 'm10-l5':
+    case 'm10-l6':
+      return <DiagramM10L4 className={className} />;
+
+    // MOD-11 Cases
+    case 'm11-l1':
+    case 'm11-l2':
+    case 'm11-l6':
+      return <DiagramM11L2 className={className} />;
+
+    case 'm11-l4':
+    case 'm11-l5':
+      return <DiagramM11L4 className={className} />;
+
+    // MOD-12 Cases
+    case 'm12-l3':
+      return <DiagramM12L3 className={className} />;
+
+    case 'm12-l5':
+      return <DiagramM12L5 className={className} />;
+
+    case 'm12-l6':
+      return <DiagramM11L2 className={className} />;
 
     default:
       return (
