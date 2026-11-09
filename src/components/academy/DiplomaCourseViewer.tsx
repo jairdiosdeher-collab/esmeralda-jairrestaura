@@ -22,6 +22,7 @@ import {
 import { DIPLOMA_MODULES } from '../../data/academy/modules';
 import { DiplomaModule, ModuleLesson, QuizQuestion } from '../../types/academy';
 import { AcademyStorageService } from '../../services/academyStorage';
+import { GemologicalTechnicalSVG } from './GemologicalTechnicalSVG';
 
 interface DiplomaCourseViewerProps {
   onModuleCompleted?: (moduleId: number) => void;
@@ -391,30 +392,73 @@ export const DiplomaCourseViewer: React.FC<DiplomaCourseViewerProps> = ({
                 </div>
               )}
 
-              {/* Lesson Scientific Image / Diagram with explicit imageType Badge */}
-              {activeLesson.diagramUrl && (
-                <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 group">
-                  <img
-                    src={activeLesson.diagramUrl}
-                    alt={activeLesson.diagramCaption || activeLesson.title}
-                    className="w-full h-56 sm:h-72 object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
-                  <div className="absolute top-3 left-3">
-                    <span className="px-3 py-1 rounded-full bg-slate-950/85 backdrop-blur-md border border-emerald-500/50 text-emerald-300 text-[10px] font-black uppercase tracking-wider shadow-lg flex items-center gap-1.5">
-                      <Sparkles className="w-3 h-3 text-emerald-400" />
-                      {activeLesson.diagramType || 'Registro Fotográfico Científico'}
-                    </span>
+              {/* Lesson Scientific Image / Diagram with explicit imageType Badge & Verification Metadata */}
+              {(activeLesson.svgTechnicalDiagram || activeLesson.diagramKey) ? (
+                <div className="space-y-2">
+                  <div className="relative rounded-2xl overflow-hidden border border-emerald-800/80 bg-slate-950 p-2 shadow-2xl">
+                    <GemologicalTechnicalSVG type={activeLesson.svgTechnicalDiagram || activeLesson.diagramKey || ''} />
+                    <div className="absolute top-4 left-4">
+                      <span className="px-3 py-1 rounded-full bg-slate-950/90 backdrop-blur-md border border-emerald-500/60 text-emerald-300 text-[10px] font-black uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+                        <Sparkles className="w-3 h-3 text-emerald-400" />
+                        {activeLesson.diagramType || 'Ilustración Técnica Vectorial'}
+                      </span>
+                    </div>
                   </div>
                   {activeLesson.diagramCaption && (
-                    <div className="absolute bottom-3 left-3 right-3 text-[11px] text-slate-300 bg-slate-950/85 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-800/80">
-                      <span className="font-bold text-amber-400">Figura Científica: </span>
-                      {activeLesson.diagramCaption}
+                    <div className="text-[11px] text-slate-300 bg-slate-950/90 px-4 py-2.5 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <span className="font-bold text-amber-400">Figura Científica: </span>
+                        <span>{activeLesson.diagramCaption}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[10px] font-mono shrink-0">
+                        <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                          {activeLesson.isRealPhoto ? 'Fotografía Real' : 'Esquema Técnico Vectorial'}
+                        </span>
+                        <span className="text-slate-400">{activeLesson.imageSource || 'Archivo Academia JAIRRESTAURA'}</span>
+                      </div>
                     </div>
                   )}
                 </div>
-              )}
+              ) : activeLesson.diagramUrl ? (
+                <div className="space-y-2">
+                  <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 group">
+                    <img
+                      src={activeLesson.diagramUrl}
+                      alt={activeLesson.diagramCaption || activeLesson.title}
+                      className="w-full h-56 sm:h-72 object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent"></div>
+                    <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+                      <span className="px-3 py-1 rounded-full bg-slate-950/90 backdrop-blur-md border border-emerald-500/50 text-emerald-300 text-[10px] font-black uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+                        <Sparkles className="w-3 h-3 text-emerald-400" />
+                        {activeLesson.diagramType || 'Registro Fotográfico Científico'}
+                      </span>
+                      <span className={`px-2.5 py-1 rounded-full backdrop-blur-md text-[10px] font-bold ${
+                        activeLesson.verificationStatus === 'Imagen científica pendiente de verificación'
+                          ? 'bg-amber-950/90 text-amber-300 border border-amber-600/60'
+                          : 'bg-emerald-950/90 text-emerald-300 border border-emerald-600/60'
+                      }`}>
+                        {activeLesson.verificationStatus || 'Verificada Científicamente'}
+                      </span>
+                    </div>
+                  </div>
+                  {activeLesson.diagramCaption && (
+                    <div className="text-[11px] text-slate-300 bg-slate-950/90 px-4 py-2.5 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <span className="font-bold text-amber-400">Figura Científica: </span>
+                        <span>{activeLesson.diagramCaption}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400 shrink-0">
+                        <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-300">
+                          {activeLesson.isRealPhoto ? 'Fotografía de Campo/Microscopio' : 'Ilustración Educativa'}
+                        </span>
+                        <span>Fuente: {activeLesson.imageSource || 'Archivo Documental JAIRRESTAURA'}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : null}
 
               {/* Lesson Text Body */}
               <div className="prose prose-invert max-w-none text-slate-200 space-y-4 text-xs sm:text-sm leading-relaxed">

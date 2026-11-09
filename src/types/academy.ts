@@ -16,7 +16,11 @@ export type GemologicalImageType =
   | 'Corte Lapidario'
   | 'Espectro Óptico / FTIR'
   | 'Ilustración Técnica Vectorial'
-  | 'Mapa de Yacimiento';
+  | 'Esquema Cristalográfico Vectorial'
+  | 'Mapa de Yacimiento'
+  | 'Fotografía de Yacimiento Minero';
+
+export type ImageVerificationStatus = 'Verificada Científicamente' | 'Esquema Educativo Validador' | 'Imagen científica pendiente de verificación';
 
 export interface QuizQuestion {
   id: string;
@@ -46,11 +50,19 @@ export interface ModuleLesson {
   diagramType?: GemologicalImageType;
   diagramCaption?: string;
   svgTechnicalDiagram?: string; // Key or SVG code for interactive/crisp vector diagram
+  diagramKey?: string; // Vector diagram identifier
+  imageSource?: string; // e.g. 'GIA Gems & Gemology', 'Servicio Geológico Colombiano', 'Smithsonian Institution'
+  imageAuthor?: string; // e.g. 'Dr. Edward Gübelin', 'G. Giuliani', 'Atlas JAIRRESTAURA'
+  imageLicense?: string; // e.g. 'Uso Académico / Creative Commons CC-BY-SA', 'Dominio Público', 'Archivo JAIRRESTAURA'
+  isRealPhoto?: boolean; // true: Fotografía real de microscopio/campo; false: Ilustración técnica
+  verificationStatus?: ImageVerificationStatus;
   gallery?: { 
     url: string; 
     caption: string; 
     credit?: string; 
     imageType?: GemologicalImageType;
+    isRealPhoto?: boolean;
+    verificationStatus?: ImageVerificationStatus;
   }[];
   references?: {
     author: string;
