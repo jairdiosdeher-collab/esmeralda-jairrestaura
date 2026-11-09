@@ -17,7 +17,8 @@ import {
   ArrowRight,
   ArrowLeft,
   Check,
-  RotateCcw
+  RotateCcw,
+  ShieldCheck
 } from 'lucide-react';
 import { DIPLOMA_MODULES } from '../../data/academy/modules';
 import { DiplomaModule, ModuleLesson, QuizQuestion } from '../../types/academy';
@@ -35,6 +36,7 @@ export const DiplomaCourseViewer: React.FC<DiplomaCourseViewerProps> = ({
   const [selectedModuleId, setSelectedModuleId] = useState<number>(1);
   const [selectedLessonId, setSelectedLessonId] = useState<string>('les-01-01');
   const [activeTab, setActiveTab] = useState<'leccion' | 'estudio_caso' | 'practica' | 'evaluacion' | 'bibliografia'>('leccion');
+  const [showVisualCard, setShowVisualCard] = useState<boolean>(false);
 
   // Quiz state for the active module
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
@@ -405,17 +407,91 @@ export const DiplomaCourseViewer: React.FC<DiplomaCourseViewerProps> = ({
                     </div>
                   </div>
                   {activeLesson.diagramCaption && (
-                    <div className="text-[11px] text-slate-300 bg-slate-950/90 px-4 py-2.5 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <div>
-                        <span className="font-bold text-amber-400">Figura Científica: </span>
-                        <span>{activeLesson.diagramCaption}</span>
+                    <div className="space-y-2">
+                      <div className="text-[11px] text-slate-300 bg-slate-950/90 px-4 py-2.5 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <span className="font-bold text-amber-400">Figura Científica: </span>
+                          <span>{activeLesson.diagramCaption}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-[10px] font-mono shrink-0">
+                          <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                            {activeLesson.isRealPhoto ? 'Fotografía Real' : 'Esquema Técnico Vectorial'}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setShowVisualCard(!showVisualCard)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-emerald-950 hover:bg-emerald-900 border border-emerald-600/70 text-emerald-300 font-sans font-bold hover:text-white transition-all shadow"
+                            title="Ver ficha técnica y parámetros de validación de este recurso"
+                          >
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>{showVisualCard ? 'Ocultar Ficha' : 'Ficha de Control Visual'}</span>
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2 text-[10px] font-mono shrink-0">
-                        <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-                          {activeLesson.isRealPhoto ? 'Fotografía Real' : 'Esquema Técnico Vectorial'}
-                        </span>
-                        <span className="text-slate-400">{activeLesson.imageSource || 'Archivo Academia JAIRRESTAURA'}</span>
-                      </div>
+
+                      {/* Visual Control Card Accordion */}
+                      {showVisualCard && (
+                        <div className="bg-slate-950/95 border border-emerald-600/50 rounded-xl p-4 text-xs space-y-3 shadow-2xl backdrop-blur-md animate-in fade-in duration-200">
+                          <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold text-[10px] border border-emerald-700/60">
+                                {activeLesson.visualControlCard?.moduleCode || activeModule.code} • {activeLesson.visualControlCard?.lessonCode || activeLesson.id.toUpperCase()}
+                              </span>
+                              <span className="font-bold text-slate-100 text-[11px]">
+                                Ficha de Control y Validación Científica de Imagen
+                              </span>
+                            </div>
+                            <span className="px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 text-[10px] font-extrabold border border-emerald-600 flex items-center gap-1">
+                              ✓ {activeLesson.visualControlCard?.validationStatus || activeLesson.verificationStatus || 'Verificada Científicamente'}
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px]">
+                            <div>
+                              <span className="text-slate-400 font-semibold block text-[10px] uppercase tracking-wider">Recurso Representado:</span>
+                              <p className="text-emerald-300 font-medium mt-0.5">
+                                {activeLesson.visualControlCard?.resourceName || activeLesson.diagramCaption || activeLesson.title}
+                              </p>
+                            </div>
+                            <div>
+                              <span className="text-slate-400 font-semibold block text-[10px] uppercase tracking-wider">Concepto Científico Central:</span>
+                              <p className="text-slate-200 mt-0.5">
+                                {activeLesson.visualControlCard?.scientificConcept || activeLesson.summary}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="text-[11px] bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80">
+                            <span className="text-amber-400 font-semibold block text-[10px] uppercase tracking-wider mb-1">
+                              Descripción Técnica y Criterio Pedagógico:
+                            </span>
+                            <p className="text-slate-300 leading-relaxed">
+                              {activeLesson.visualControlCard?.technicalDescription || activeLesson.diagramCaption || 'Registro analítico estandarizado sin distorsiones decorativas para formación técnica de alta fidelidad.'}
+                            </p>
+                          </div>
+
+                          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/80 text-[10px] text-slate-400 font-mono">
+                            <div>
+                              <span className="text-slate-500">Fuente / Institución: </span>
+                              <span className="text-emerald-400 font-medium">
+                                {activeLesson.visualControlCard?.source || activeLesson.imageSource || 'Archivo Documental JAIRRESTAURA'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-slate-500">Tipo de Recurso: </span>
+                              <span className="text-slate-200 font-sans font-semibold">
+                                {activeLesson.visualControlCard?.resourceType || (activeLesson.isRealPhoto ? 'Fotografía de Campo/Microscopio' : 'Diagrama Vectorial Estandarizado')}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-slate-500">Texto Accesible (Alt): </span>
+                              <span className="text-slate-300 italic">
+                                "{activeLesson.visualControlCard?.altText || activeLesson.diagramCaption || activeLesson.title}"
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -444,17 +520,91 @@ export const DiplomaCourseViewer: React.FC<DiplomaCourseViewerProps> = ({
                     </div>
                   </div>
                   {activeLesson.diagramCaption && (
-                    <div className="text-[11px] text-slate-300 bg-slate-950/90 px-4 py-2.5 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <div>
-                        <span className="font-bold text-amber-400">Figura Científica: </span>
-                        <span>{activeLesson.diagramCaption}</span>
+                    <div className="space-y-2">
+                      <div className="text-[11px] text-slate-300 bg-slate-950/90 px-4 py-2.5 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <span className="font-bold text-amber-400">Figura Científica: </span>
+                          <span>{activeLesson.diagramCaption}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400 shrink-0">
+                          <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-300">
+                            {activeLesson.isRealPhoto ? 'Fotografía de Campo/Microscopio' : 'Ilustración Educativa'}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setShowVisualCard(!showVisualCard)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-emerald-600/60 text-emerald-300 font-sans font-bold hover:text-white transition-all shadow"
+                            title="Ver ficha técnica y parámetros de validación de este recurso"
+                          >
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>{showVisualCard ? 'Ocultar Ficha' : 'Ficha de Control Visual'}</span>
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400 shrink-0">
-                        <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-300">
-                          {activeLesson.isRealPhoto ? 'Fotografía de Campo/Microscopio' : 'Ilustración Educativa'}
-                        </span>
-                        <span>Fuente: {activeLesson.imageSource || 'Archivo Documental JAIRRESTAURA'}</span>
-                      </div>
+
+                      {/* Visual Control Card Accordion for Real Photo */}
+                      {showVisualCard && (
+                        <div className="bg-slate-950/95 border border-emerald-600/50 rounded-xl p-4 text-xs space-y-3 shadow-2xl backdrop-blur-md animate-in fade-in duration-200">
+                          <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold text-[10px] border border-emerald-700/60">
+                                {activeLesson.visualControlCard?.moduleCode || activeModule.code} • {activeLesson.visualControlCard?.lessonCode || activeLesson.id.toUpperCase()}
+                              </span>
+                              <span className="font-bold text-slate-100 text-[11px]">
+                                Ficha de Control y Validación Científica de Imagen
+                              </span>
+                            </div>
+                            <span className="px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 text-[10px] font-extrabold border border-emerald-600 flex items-center gap-1">
+                              ✓ {activeLesson.visualControlCard?.validationStatus || activeLesson.verificationStatus || 'Verificada Científicamente'}
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px]">
+                            <div>
+                              <span className="text-slate-400 font-semibold block text-[10px] uppercase tracking-wider">Recurso Representado:</span>
+                              <p className="text-emerald-300 font-medium mt-0.5">
+                                {activeLesson.visualControlCard?.resourceName || activeLesson.diagramCaption || activeLesson.title}
+                              </p>
+                            </div>
+                            <div>
+                              <span className="text-slate-400 font-semibold block text-[10px] uppercase tracking-wider">Concepto Científico Central:</span>
+                              <p className="text-slate-200 mt-0.5">
+                                {activeLesson.visualControlCard?.scientificConcept || activeLesson.summary}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="text-[11px] bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80">
+                            <span className="text-amber-400 font-semibold block text-[10px] uppercase tracking-wider mb-1">
+                              Descripción Técnica y Criterio Pedagógico:
+                            </span>
+                            <p className="text-slate-300 leading-relaxed">
+                              {activeLesson.visualControlCard?.technicalDescription || activeLesson.diagramCaption || 'Registro analítico estandarizado sin distorsiones decorativas para formación técnica de alta fidelidad.'}
+                            </p>
+                          </div>
+
+                          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/80 text-[10px] text-slate-400 font-mono">
+                            <div>
+                              <span className="text-slate-500">Fuente / Institución: </span>
+                              <span className="text-emerald-400 font-medium">
+                                {activeLesson.visualControlCard?.source || activeLesson.imageSource || 'Archivo Documental JAIRRESTAURA'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-slate-500">Tipo de Recurso: </span>
+                              <span className="text-slate-200 font-sans font-semibold">
+                                {activeLesson.visualControlCard?.resourceType || (activeLesson.isRealPhoto ? 'Fotografía de Campo/Microscopio' : 'Diagrama Vectorial Estandarizado')}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-slate-500">Texto Accesible (Alt): </span>
+                              <span className="text-slate-300 italic">
+                                "{activeLesson.visualControlCard?.altText || activeLesson.diagramCaption || activeLesson.title}"
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

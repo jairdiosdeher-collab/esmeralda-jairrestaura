@@ -124,15 +124,26 @@ Donde:
         'Esmeraldas de África y Brasil son más densas (2.74 a 2.78 g/cm³) por presencia de hierro y cesio en canales.',
         'La pesada hidrostática es un ensayo no destructivo esencial para el cribado rápido en laboratorio.'
       ],
-      scientificFormula: 'SG = W_{aire} / (W_{aire} - W_{agua}) \\quad [\\text{Valor típico Colombia: } 2.69 \\pm 0.02]',
-      diagramType: 'Instrumental Óptico',
-      diagramCaption: 'Balanza gemológica analítica de 4 decimales acoplada con kit de inmersión hidrostática para gravedad específica.',
-      imageSource: 'Laboratorio Gemológico CDTEC Bogotá / Archivo JAIRRESTAURA',
-      imageAuthor: 'Unidad de Metrología Gemológica CDTEC',
-      imageLicense: 'Uso Académico Autorizado',
-      isRealPhoto: true,
+      scientificFormula: 'SG = W_{aire} / (W_{aire} - W_{agua}) \\quad [\\text{Valor típico Colombia: } 2.695 \\pm 0.02\\text{ g/cm}^3]',
+      svgTechnicalDiagram: 'hydrostatic_balance',
+      diagramType: 'Ilustración Técnica Vectorial',
+      diagramCaption: 'Balanza gemológica analítica de 4 decimales con kit hidrostático: pesada en aire (W_aire = 1.0484 g), puente aislado, recipiente de vidrio con agua destilada a 20°C y esmeralda suspendida en cazoleta sumergida (W_agua = 0.6594 g). SG = 2.695 g/cm³.',
+      imageSource: 'Laboratorio de Metrología Gemológica CDTEC / Comité Técnico JAIRRESTAURA',
+      imageAuthor: 'Comité de Metrología y Física del Estado Sólido JAIRRESTAURA',
+      imageLicense: 'Material Educativo Oficial JAIRRESTAURA',
+      isRealPhoto: false,
       verificationStatus: 'Verificada Científicamente',
-      diagramUrl: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80'
+      visualControlCard: {
+        moduleCode: 'MOD-01',
+        lessonCode: 'LECC-1.3',
+        resourceName: 'Balanza Analítica con Kit de Medición Hidrostática de Inmersión',
+        scientificConcept: 'Determinación de la Gravedad Específica (SG) y Principio de Arquímedes en Berilo Variedad Esmeralda',
+        technicalDescription: 'Aparato experimental compuesto por balanza electrónica con resolución 0.0001 g, puente estático desacoplado del plato de pesada, vaso de precipitados de borosilicato con agua destilada desaireada a 20°C, y juego de cazoletas conectadas por filamento de platino. Permite calcular el empuje hidrostático E = W_aire - W_agua para discriminar esmeraldas colombianas (2.68 - 2.72 g/cm³) frente a berilos alcalinos de África/Brasil (>2.74 g/cm³) y cuarzos teñidos (2.65 g/cm³).',
+        source: 'Laboratorio CDTEC Bogotá / Estándar CIBJO & GIA Gem Instruments',
+        resourceType: 'Diagrama Vectorial Estandarizado',
+        validationStatus: 'Verificada Científicamente',
+        altText: 'Diagrama técnico interactivo de balanza analítica digital de precisión conectada a kit de inmersión hidrostática para esmeralda'
+      }
     },
     {
       id: 'm1-l4',

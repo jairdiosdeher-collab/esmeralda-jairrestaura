@@ -35,6 +35,18 @@ export interface QuizQuestion {
   scientificReference?: string;
 }
 
+export interface VisualControlCard {
+  moduleCode: string;
+  lessonCode: string;
+  resourceName: string;
+  scientificConcept: string;
+  technicalDescription: string;
+  source: string;
+  resourceType: 'Fotografía de Campo/Mina' | 'Microfotografía Científica' | 'Ilustración Técnica' | 'Diagrama Vectorial Estandarizado';
+  validationStatus: ImageVerificationStatus;
+  altText: string;
+}
+
 export interface ModuleLesson {
   id: string;
   moduleId: number;
@@ -56,6 +68,7 @@ export interface ModuleLesson {
   imageLicense?: string; // e.g. 'Uso Académico / Creative Commons CC-BY-SA', 'Dominio Público', 'Archivo JAIRRESTAURA'
   isRealPhoto?: boolean; // true: Fotografía real de microscopio/campo; false: Ilustración técnica
   verificationStatus?: ImageVerificationStatus;
+  visualControlCard?: VisualControlCard;
   gallery?: { 
     url: string; 
     caption: string; 

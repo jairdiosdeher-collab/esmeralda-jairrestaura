@@ -7,6 +7,102 @@ interface GemDiagramProps {
 
 export const GemologicalTechnicalSVG: React.FC<GemDiagramProps> = ({ type, className = 'w-full h-64' }) => {
   switch (type) {
+    case 'hydrostatic_balance':
+      return (
+        <svg viewBox="0 0 440 260" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+          <rect width="440" height="260" fill="#04121a" rx="12" />
+          
+          {/* Analytical Balance Base and Housing */}
+          <g transform="translate(25, 20)">
+            {/* Balance Body */}
+            <rect x="0" y="150" width="180" height="65" fill="#0f172a" stroke="#334155" strokeWidth="2" rx="6" />
+            <rect x="15" y="165" width="80" height="32" fill="#020617" stroke="#0ea5e9" strokeWidth="1.5" rx="3" />
+            
+            {/* Digital Display showing Reading */}
+            <text x="55" y="186" fill="#38bdf8" fontSize="13" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+              0.6594 g
+            </text>
+            <text x="105" y="176" fill="#64748b" fontSize="8" fontWeight="bold">W(agua)</text>
+            <text x="105" y="190" fill="#a7f3d0" fontSize="8">Tara: 0.0000</text>
+
+            {/* Weighing Pan Stem & Base Platform */}
+            <line x1="90" y1="150" x2="90" y2="135" stroke="#94a3b8" strokeWidth="4" />
+            <ellipse cx="90" cy="135" rx="35" ry="6" fill="#475569" stroke="#cbd5e1" strokeWidth="1.5" />
+
+            {/* Straddle Bridge (Puente independiente que no toca el plato) */}
+            <path d="M 30 148 L 30 85 L 150 85 L 150 148" stroke="#f59e0b" strokeWidth="2.5" fill="none" strokeDasharray="4 2" />
+            <text x="90" y="80" fill="#fbbf24" fontSize="8" fontWeight="bold" textAnchor="middle">Puente aislado (no pesa)</text>
+
+            {/* Glass Beaker with Distilled Water */}
+            <rect x="45" y="45" width="90" height="75" fill="#0369a1" fillOpacity="0.15" stroke="#38bdf8" strokeWidth="1.5" rx="4" />
+            {/* Water Fill with Meniscus */}
+            <rect x="47" y="60" width="86" height="58" fill="#0284c7" fillOpacity="0.3" />
+            <path d="M 47 60 Q 90 64 133 60" stroke="#7dd3fc" strokeWidth="1.5" fill="none" />
+            <text x="130" y="72" fill="#7dd3fc" fontSize="8" textAnchor="end">H₂O destilada (20°C)</text>
+
+            {/* Dual Suspension Kit (Kit Hidrostático) */}
+            {/* Upper Pan for Weight in Air */}
+            <line x1="90" y1="135" x2="90" y2="20" stroke="#e2e8f0" strokeWidth="1.5" />
+            <ellipse cx="90" cy="20" rx="22" ry="5" fill="#047857" stroke="#34d399" strokeWidth="1.5" />
+            <text x="90" y="14" fill="#34d399" fontSize="8" fontWeight="bold" textAnchor="middle">Cazoleta Aire (W_aire)</text>
+
+            {/* Fine Wire plunging into beaker */}
+            <line x1="90" y1="20" x2="90" y2="90" stroke="#cbd5e1" strokeWidth="1" />
+            
+            {/* Submerged Basket (Cazoleta de inmersión) holding Emerald */}
+            <path d="M 80 90 L 90 98 L 100 90" stroke="#a7f3d0" strokeWidth="1.5" fill="none" />
+            {/* Submerged Emerald Gem */}
+            <polygon points="90,85 96,91 93,96 87,96 84,91" fill="#10b981" stroke="#34d399" strokeWidth="1.2" />
+            <ellipse cx="90" cy="90" rx="3" ry="1.5" fill="#ecfdf5" opacity="0.6" />
+            
+            {/* Force vectors */}
+            <line x1="106" y1="92" x2="106" y2="78" stroke="#38bdf8" strokeWidth="1.8" />
+            <polygon points="106,75 103,81 109,81" fill="#38bdf8" />
+            <text x="112" y="84" fill="#38bdf8" fontSize="8" fontWeight="bold">Empuje (E)</text>
+          </g>
+
+          {/* Educational Callouts & Calculation Column */}
+          <g transform="translate(230, 20)">
+            <text x="0" y="16" fill="#38bdf8" fontSize="13" fontWeight="bold">MÉTODO HIDROSTÁTICO (ARQUÍMEDES)</text>
+            <text x="0" y="32" fill="#94a3b8" fontSize="10">Determinación rigurosa de Gravedad Específica (SG)</text>
+
+            {/* Step 1 Box */}
+            <g transform="translate(0, 44)">
+              <rect x="0" y="0" width="195" height="34" fill="#022c22" stroke="#059669" strokeWidth="1.2" rx="4" />
+              <text x="8" y="14" fill="#34d399" fontSize="9" fontWeight="bold">1. Peso de la muestra en seco (aire):</text>
+              <text x="8" y="27" fill="#ecfdf5" fontSize="10" fontFamily="monospace">W_aire = 1.0484 g (5.242 ct)</text>
+            </g>
+
+            {/* Step 2 Box */}
+            <g transform="translate(0, 84)">
+              <rect x="0" y="0" width="195" height="34" fill="#082f49" stroke="#0284c7" strokeWidth="1.2" rx="4" />
+              <text x="8" y="14" fill="#38bdf8" fontSize="9" fontWeight="bold">2. Peso aparente sumergida en agua:</text>
+              <text x="8" y="27" fill="#f0f9ff" fontSize="10" fontFamily="monospace">W_agua = 0.6594 g</text>
+            </g>
+
+            {/* Formula & Calculation Box */}
+            <g transform="translate(0, 124)">
+              <rect x="0" y="0" width="195" height="60" fill="#0f172a" stroke="#eab308" strokeWidth="1.5" rx="4" />
+              <text x="8" y="14" fill="#fde047" fontSize="9" fontWeight="bold">3. Ecuación de Densidad Relativa:</text>
+              <text x="8" y="29" fill="#ffffff" fontSize="10" fontFamily="monospace">SG = W_aire / (W_aire - W_agua)</text>
+              <text x="8" y="43" fill="#a7f3d0" fontSize="10" fontFamily="monospace">SG = 1.0484 / 0.3890 = 2.695 g/cm³</text>
+              <text x="8" y="55" fill="#34d399" fontSize="8" fontWeight="bold">✓ Rango Colombia: 2.68 - 2.72 g/cm³</text>
+            </g>
+
+            {/* Diagnostic Note */}
+            <text x="0" y="200" fill="#fca5a5" fontSize="8">
+              • Cuarzo verde: 2.65 g/cm³ (Flotaría relativo al berilo)
+            </text>
+            <text x="0" y="212" fill="#93c5fd" fontSize="8">
+              • Esmeralda Zambia: 2.74 - 2.78 g/cm³ (Más densa por Fe/Cs)
+            </text>
+            <text x="0" y="224" fill="#fde047" fontSize="8">
+              • Vidrios / Plásticos: &lt; 2.50 o &gt; 3.00 g/cm³
+            </text>
+          </g>
+        </svg>
+      );
+
     case 'hexagonal_beryl':
       return (
         <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
