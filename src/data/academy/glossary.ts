@@ -915,5 +915,355 @@ export const COMPREHENSIVE_GLOSSARY: GlossaryTerm[] = [
     simpleExplanation: 'La búsqueda artesanal tradicional de esmeraldas en las orillas de los ríos por parte de las comunidades locales.',
     emeraldApplication: 'Guaqueros tradicionales inscritos ante la alcaldía municipal para vender pequeñas cantidades de esmeraldas legalmente.',
     example: 'Inscripción en el censo de minería de subsistencia del municipio de Muzo.'
+  },
+  // --- CIENCIA ÓPTICA Y FÍSICA GEMOLÓGICA ---
+  {
+    term: 'Filtro Chelsea (Filtro de Esmeralda)',
+    category: 'Óptica & Propiedades Físicas',
+    rigorousDefinition: 'Filtro dicroico de absorción selectiva que solo transmite dos ventanas del espectro visible: una banda estrecha en el amarillo-verde (560 nm) y el rojo profundo (>690 nm).',
+    simpleExplanation: 'Un pequeño filtro de bolsillo que permite distinguir rápidamente si una piedra verde tiene cromo.',
+    emeraldApplication: 'Las esmeraldas colombianas ricas en cromo y muy pobres en hierro se observan con un color rosado a rojo frambuesa intenso, mientras que imitaciones de vidrio o peridoto permanecen verdes.',
+    example: 'Reacción rojo fuego de una esmeralda de Muzo bajo luz incandescente y filtro Chelsea.'
+  },
+  {
+    term: 'Dicroscopio de Calcita',
+    category: 'Óptica & Propiedades Físicas',
+    rigorousDefinition: 'Instrumento óptico de mano que utiliza un romboedro de calcita espática óptica acromática para separar los dos rayos refractados de una gema anisótropa y proyectarlos lado a lado.',
+    simpleExplanation: 'Aparato que divide la luz de la piedra para mostrar simultáneamente sus dos colores pleocroicos.',
+    emeraldApplication: 'Permite observar nítidamente en una esmeralda colombiana el rayo ordinario (verde azulado profundo) y el rayo extraordinario (verde amarillento brillante).',
+    example: 'Verificación de corte: la tabla de la esmeralda orientada para mostrar el rayo verde azulado.'
+  },
+  {
+    term: 'Indicatriz Óptica',
+    category: 'Óptica & Propiedades Físicas',
+    rigorousDefinition: 'Elipsoide geométrico de referencia imaginario cuyos radios vectores son proporcionales a los índices de refracción de la luz que vibra en esas direcciones dentro del cristal.',
+    simpleExplanation: 'Modelo geométrico que representa cómo cambia la velocidad de la luz en cada dirección dentro de la piedra.',
+    emeraldApplication: 'En el berilo (esmeralda), la indicatriz es un esferoide oblato uniaxial negativo donde n_e < n_o.',
+    example: 'Cálculo de birrefringencia a partir de los semiejes de la indicatriz óptica del berilo.'
+  },
+  {
+    term: 'Isógiras y Melatopo',
+    category: 'Óptica & Propiedades Físicas',
+    rigorousDefinition: 'Bandas oscuras de extinción (isógiras) que se cruzan en un punto central ciego (melatopo) al observar un cristal uniaxial bajo conoscopio entre polarizadores cruzados.',
+    simpleExplanation: 'La cruz negra que se forma en el conoscopio y marca exactamente la salida del eje óptico de la esmeralda.',
+    emeraldApplication: 'Confirma sin error que la gema es uniaxial y localiza la dirección del eje c para comprobar la orientación de la talla.',
+    example: 'Figura de interferencia uniaxial centrada en conoscopio gemológico.'
+  },
+  {
+    term: 'Ángulo Crítico (Límite)',
+    category: 'Óptica & Propiedades Físicas',
+    rigorousDefinition: 'Ángulo mínimo de incidencia para el cual un rayo luminoso que viaja de un medio ópticamente más denso hacia uno menos denso sufre reflexión total interna.',
+    simpleExplanation: 'El ángulo exacto a partir del cual la luz ya no sale de la piedra sino que rebota dentro de ella como en un espejo.',
+    emeraldApplication: 'Fundamento del refractómetro gemológico y determinante de los ángulos de culata (40°-43°) en lapidación para evitar fugas de luz.',
+    example: 'Ángulo límite berilo-aire: aproximadamente 39.3 grados.'
+  },
+  {
+    term: 'Ley de Snell-Descartes',
+    category: 'Óptica & Propiedades Físicas',
+    rigorousDefinition: 'Ley física que describe la relación cuantitativa entre los ángulos de incidencia y refracción cuando la luz atraviesa la interfase entre dos medios con diferentes índices de refracción.',
+    simpleExplanation: 'La fórmula que calcula cuánto se tuerce un rayo de luz al entrar en la esmeralda.',
+    emeraldApplication: 'n1 · sen(θ1) = n2 · sen(θ2), base de toda la óptica geométrica lapidaria y de la refractometría.',
+    example: 'Cálculo de la desviación angular al entrar la luz del aire (n=1) al berilo (n=1.577).'
+  },
+  {
+    term: 'Dispersión Óptica',
+    category: 'Óptica & Propiedades Físicas',
+    rigorousDefinition: 'Variación del índice de refracción en función de la longitud de onda de la luz, cuantificada por la diferencia entre los índices en la línea B de Fraunhofer (rojo 686.7 nm) y la línea G (azul 430.8 nm).',
+    simpleExplanation: 'La capacidad de una gema de descomponer la luz blanca en destellos de colores del arcoíris ("fuego").',
+    emeraldApplication: 'En la esmeralda la dispersión es muy baja (0.014), por lo que exhibe color corporal puro sin fuego cromático distractivo.',
+    example: 'Contraste entre el bajo fuego del berilo (0.014) y el alto fuego del diamante (0.044).'
+  },
+  {
+    term: 'Luz de Wood (Radiación Ultravioleta)',
+    category: 'Óptica & Propiedades Físicas',
+    rigorousDefinition: 'Emisión de radiación electromagnética ultravioleta en longitudes de onda larga (LWUV a 365 nm) y corta (SWUV a 254 nm) utilizada para excitar fotoluminiscencia.',
+    simpleExplanation: 'La lámpara de luz negra usada para comprobar el brillo y fluorescencia de las piedras.',
+    emeraldApplication: 'Las esmeraldas colombianas muestran fluorescencia roja débil a moderada en LWUV debido a su cromo libre de hierro extintor, y revelan resinas poliméricas por su fluorescencia blanco-azulada.',
+    example: 'Detección de resina líquida Opticon en fisuras bajo lámpara UV de 365 nm.'
+  },
+  // --- ESPECTROSCOPÍA Y LABORATORIO CIENTÍFICO ---
+  {
+    term: 'Espectroscopía Infrarroja por Transformada de Fourier (FTIR)',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Técnica analítica no destructiva que mide la absorción de radiación infrarroja media (4000 a 400 cm⁻¹) para identificar modos vibracionales de enlaces moleculares específicos.',
+    simpleExplanation: 'Estudio de laboratorio con rayos infrarrojos que detecta la "huella digital" de resinas y polímeros artificiales en las grietas.',
+    emeraldApplication: 'Método estándar de CDTEC, GIA y Gübelin para certificar si una esmeralda tiene aceite natural de cedro o resinas sintéticas epóxicas.',
+    example: 'Picos de absorción de polímeros epoxi aromáticos en 2962, 2928 y 2872 cm⁻¹.'
+  },
+  {
+    term: 'Microespectrometría Raman',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Espectroscopía molecular inelástica de fotones dispersados por un haz láser monocromático focalizado a nivel micrométrico mediante microscopio óptico acoplado.',
+    simpleExplanation: 'Técnica láser de alta precisión que identifica el tipo exacto de cada mineral o burbuja microscópica dentro de la esmeralda.',
+    emeraldApplication: 'Permite identificar cristales de parisita, halita, calcita o dolomita dentro de cavidades sin dañar la gema tallada.',
+    example: 'Firma Raman característica de la calcita en 1086 cm⁻¹ y de la halita en solución.'
+  },
+  {
+    term: 'Espectrometría de Masas por Ablación Láser (LA-ICP-MS)',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Técnica analítica destructiva a microescala que vaporiza un micropunto (20 a 50 µm) con pulso láser para cuantificar concentraciones de elementos traza en partes por millón o mil millones.',
+    simpleExplanation: 'La prueba química más avanzada del mundo para certificar científicamente el país y mina exacta de una esmeralda.',
+    emeraldApplication: 'Determina ratios de Li, Cs, Rb, Sc, V, Cr y Fe que diferencian indiscutiblemente esmeraldas colombianas de piedras de Zambia, Brasil, Rusia o Afganistán.',
+    example: 'Perfil geoquímico LA-ICP-MS con bajo Fe (<1000 ppm) y elevado Sc y Cs típico de Muzo.'
+  },
+  {
+    term: 'Espectrometría de Fluorescencia de Rayos X (EDXRF)',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Método instrumental no destructivo que bombardea la muestra con rayos X primarios para inducir la emisión secundaria característica de los átomos presentes.',
+    simpleExplanation: 'Análisis que mide la composición elemental de la esmeralda en segundos sin tocarla ni rasparla.',
+    emeraldApplication: 'Permite clasificar rápidamente concentraciones relativas de cromo, vanadio y hierro en bruto o talladas.',
+    example: 'Espectro EDXRF confirmando predominancia de vanadio y cromo sobre hierro.'
+  },
+  {
+    term: 'Agua Estructural Tipo I y Tipo II',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Moléculas de H2O confinadas en los canales nanoscópicos del berilo, clasificadas según la orientación de su momento dipolar: Tipo I perpendicular al eje c (sin catión alcalino vecino) y Tipo II paralela al eje c (coordinada con Na+ o Cs+).',
+    simpleExplanation: 'El agua atómica atrapada en los túneles microscópicos de la esmeralda desde su nacimiento geológico.',
+    emeraldApplication: 'En esmeraldas sintéticas hidrotermales y por flujo el espectro de agua en el infrarrojo es radicalmente distinto al de las esmeraldas naturales colombianas.',
+    example: 'Proporción de agua Tipo II medida por FTIR para discriminar gemas naturales de sintéticos Biron.'
+  },
+  {
+    term: 'Opticon (Resina Polimérica Pre-polímero)',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Resina sintética termoendurecible de bajo peso molecular utilizada con o sin endurecedor catalizador para rellenar fracturas abiertas a superficie en esmeraldas.',
+    simpleExplanation: 'Sustancia plástica artificial usada para rellenar grietas y hacer que la piedra parezca más transparente de forma artificial.',
+    emeraldApplication: 'Su uso requiere declaración obligatoria según normas internacionales. Si se polimeriza con catalizador, es un relleno de difícil reversibilidad clasificado como tratamiento artificial.',
+    example: 'Detección de endurecedor amina por espectroscopía infrarroja en laboratorio.'
+  },
+  {
+    term: 'Grados de Mejoramiento de Claridad CIBJO/LMHC',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Escala estandarizada internacional de cuatro niveles aprobada por el Laboratory Manual Harmonisation Committee: None (Sin tratamiento), Minor (Menor), Moderate (Moderado) y Significant (Significativo).',
+    simpleExplanation: 'La clasificación oficial de los mejores laboratorios del mundo sobre cuánta resina o aceite tiene la esmeralda.',
+    emeraldApplication: 'Aparece en certificados oficiales de CDTEC, GIA y Gübelin y define el precio de mercado internacional de la gema.',
+    example: 'Certificado GIA indicando: "Clarity Enhancement: Minor (Cedarwood oil)".'
+  },
+  {
+    term: 'Efecto Flash (Destello de Interferencia)',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Fenómeno óptico de interferencia y reflexión interna en fracturas rellenas con sustancias de índice de refracción cercano pero no idéntico al del berilo, observable bajo iluminación de campo oscuro.',
+    simpleExplanation: 'Un destello naranja, rosado o azul brillante que se ve en el microscopio dentro de una grieta cuando fue rellenada artificialmente.',
+    emeraldApplication: 'Diagnóstico microscópico inmediato de la presencia de resinas epóxicas en fisuras de la esmeralda.',
+    example: 'Destello naranja-violeta en microscopía gemológica al cambiar el ángulo de iluminación.'
+  },
+  // --- MINERALOGÍA Y PETROLOGÍA AVANZADA ---
+  {
+    term: 'Euhedral vs Subhedral vs Anhedral',
+    category: 'Mineralogía & Cristalografía',
+    rigorousDefinition: 'Grados de desarrollo morfológico de las caras cristalinas: euhedral (caras completamente formadas), subhedral (caras parcialmente delimitadas) y anhedral (sin caras geométricas externas).',
+    simpleExplanation: 'Términos para describir si un cristal creció con aristas perfectas o si creció apretado y deformado.',
+    emeraldApplication: 'Los cristales colombianos de mayor cotización para coleccionistas son prismas hexagonales euhedrales de terminación plana nítida.',
+    example: 'Cristal euhedral de esmeralda de 45 mm en matriz de calcita y pirita de Chivor.'
+  },
+  {
+    term: 'Pinacoide Basal {0001}',
+    category: 'Mineralogía & Cristalografía',
+    rigorousDefinition: 'Forma cristalográfica abierta del sistema hexagonal compuesta por dos planos paralelos perpendiculares al eje vertical senario (eje c).',
+    simpleExplanation: 'La cara plana de la parte superior o base del lápiz hexagonal de esmeralda.',
+    emeraldApplication: 'Frecuentemente presenta figuras de corrosión hidrotermal y define el plano cristalográfico de menor dureza al desgaste.',
+    example: 'Terminación pinacoidal basal plana en cristales clásicos de Muzo.'
+  },
+  {
+    term: 'Prisma Hexagonal de Primer Orden {10-10}',
+    category: 'Mineralogía & Cristalografía',
+    rigorousDefinition: 'Forma prismática de seis caras verticales paralelas al eje vertical c que intersectan dos ejes horizontales a distancias iguales y son paralelas al tercero.',
+    simpleExplanation: 'Las seis paredes laterales del cilindro hexagonal de la esmeralda en bruto.',
+    emeraldApplication: 'Exhiben comúnmente estrías longitudinales verticales características producto de oscilaciones de crecimiento.',
+    example: 'Estrías verticales en caras prismáticas {10-10} de esmeraldas de Coscuez.'
+  },
+  {
+    term: 'Alotigeno vs Autígeno',
+    category: 'Geología & Depósitos',
+    rigorousDefinition: 'Términos petrológicos: autígeno describe minerales formados in situ dentro de la roca sedimentaria o diagenética; alotígeno describe componentes transportados desde otra fuente.',
+    simpleExplanation: 'Diferencia entre minerales que nacieron dentro de la roca y los que llegaron arrastrados de afuera.',
+    emeraldApplication: 'El berilo esmeralda colombiano es de formación autígena hidrotermal sincinemática en cavidades y brechas de las lutitas negras cretácicas.',
+    example: 'Calcita y berilo autígenos en venillas hidrotermales.'
+  },
+  {
+    term: 'Lutita Negra Bituminosa (Black Shale)',
+    category: 'Geología & Depósitos',
+    rigorousDefinition: 'Roca sedimentaria pelítica marina fisil rica en carbono orgánico (>2-5% TOC), arcillas, cuarzo autígeno y sulfuros de hierro de grano muy fino.',
+    simpleExplanation: 'La roca negra de caja característica de Boyacá donde se esconden y nacen las esmeraldas.',
+    emeraldApplication: 'Aportó el cromo y vanadio que los fluidos hidrotermales lixiviaron para dar el color verde inimitable al berilo.',
+    example: 'Afloramiento de lutitas negras laminadas de la Formación Paja en Muzo.'
+  },
+  {
+    term: 'Formación Rosablanca',
+    category: 'Geología & Depósitos',
+    rigorousDefinition: 'Unidad litoestratigráfica sedimentaria del Cretácico Inferior (Valanginiano-Hauteriviano) compuesta por calizas micríticas, dolomías y lutitas calcáreas.',
+    simpleExplanation: 'Capa geológica de calizas del subsuelo boyacense clave en la química de los yacimientos esmeralderos.',
+    emeraldApplication: 'Aportó el calcio y los carbonatos para las soluciones hidrotermales que precipitaron calcita espática con esmeraldas.',
+    example: 'Contacto tectónico entre lutitas y calizas de Rosablanca en el distrito de Coscuez.'
+  },
+  {
+    term: 'Formación Paja',
+    category: 'Geología & Depósitos',
+    rigorousDefinition: 'Unidad geológica del Cretácico (Barremiano-Aptiano) caracterizada por shales negros bituminosos altamente fosilíferos con niveles concrecionales de sulfuros y yeso.',
+    simpleExplanation: 'La formación geológica más rica en yacimientos de esmeraldas del cinturón occidental de Boyacá.',
+    emeraldApplication: 'Roca huésped primordial de las minas de Muzo, La Pita, Coscuez y Peñas Blancas.',
+    example: 'Fisuras de tensión con esmeraldas alojadas en paquetes de lutitas de la Formación Paja.'
+  },
+  {
+    term: 'Formación Macanal',
+    category: 'Geología & Depósitos',
+    rigorousDefinition: 'Secuencia sedimentaria marina profunda del Berriasiano-Valanginiano compuesta por lutitas grises oscuras a negras con intercalaciones de limolitas y areniscas calcáreas.',
+    simpleExplanation: 'La formación geológica que alberga los yacimientos de esmeraldas del cinturón oriental (Chivor).',
+    emeraldApplication: 'Huésped estratigráfico de las brechas mineralizadas con pirita y albita de Chivor.',
+    example: 'Mantos mineralizados de la Formación Macanal en las estribaciones orientales de Boyacá.'
+  },
+  {
+    term: 'Brecha Hidrotermal de Colapso',
+    category: 'Geología & Depósitos',
+    rigorousDefinition: 'Cuerpo de roca clástica formado por fragmentos angulosos de lutita englobados en una matriz de calcita, dolomita y cuarzo precipitada por fluidos a sobrepresión.',
+    simpleExplanation: 'Zona donde la roca explotó bajo tierra por presión de agua caliente y se pegó de nuevo con cristales blancos y verdes.',
+    emeraldApplication: 'Es la estructura geológica que los mineros buscan en los túneles subterráneos ("mantos de brecha") porque contiene las esmeraldas.',
+    example: 'Brecha con clastos de lutita y cemento de calcita blanca con prismas de esmeralda en Coscuez.'
+  },
+  {
+    term: 'Lixiviación Metasomática',
+    category: 'Geología & Depósitos',
+    rigorousDefinition: 'Proceso geoquímico mediante el cual fluidos hidrotermales reactivos y calientes extraen selectivamente elementos solubles de la roca de caja circundante.',
+    simpleExplanation: 'El lavado químico natural que sacó el berilio, cromo y vanadio de las rocas para juntarlos en la esmeralda.',
+    emeraldApplication: 'Explica el empobrecimiento en berilio y cromo de las rocas adyacentes a las vetas esmeraldíferas en Muzo y Chivor.',
+    example: 'Halo de alteración metasomática con lixiviación de cuarzo y sulfatos en lutitas.'
+  },
+  {
+    term: 'Salmueras de Evaporitas Fósiles',
+    category: 'Geología & Depósitos',
+    rigorousDefinition: 'Fluidos hidrotermales hipersalinos generados por la disolución de antiguos horizontes de yeso y sal de origen marino del Jurásico-Cretácico por aguas meteóricas profundas.',
+    simpleExplanation: 'Aguas subterráneas hirvientes y cargadas de sal que disolvieron minerales antiguos para transportar los elementos de la esmeralda.',
+    emeraldApplication: 'Generaron las salmueras saturadas de NaCl a más de 300°C que cristalizaron la esmeralda y dejaron las microhalitas de las inclusiones trifásicas.',
+    example: 'Salinidad de fluidos hidrotermales de hasta 40% en peso equivalente de NaCl en esmeraldas colombianas.'
+  },
+  // --- GEMAS SINTÉTICAS, IMITACIONES Y ENSAMBLADOS ---
+  {
+    term: 'Esmeralda Sintética Biron / Tairus (Hidrotermal)',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Berilo cristalizado en laboratorio en autoclaves de aleación de níquel bajo presiones de 1000-2000 bar y temperaturas de 500-600°C en solución acuosa alcalina o ácida.',
+    simpleExplanation: 'Esmeralda creada por el hombre en máquinas de alta presión que imitan el calor y agua de la tierra.',
+    emeraldApplication: 'Posee la misma composición química que la esmeralda pero se reconoce por sus líneas de crecimiento en chevrón y ausencia de halita en inclusiones.',
+    example: 'Esmeralda sintética hidrotermal de origen ruso vendida engañosamente como natural.'
+  },
+  {
+    term: 'Esmeralda Sintética Chatham / Gilson (Por Flujo)',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Berilo sintetizado disolviendo óxidos puros de berilio, aluminio, silicio y cromo en un fundente químico líquido (como molibdato de litio) a presión atmosférica normal.',
+    simpleExplanation: 'Esmeralda artificial cultivada flotando en un caldo de sales derretidas en crisoles de platino.',
+    emeraldApplication: 'Se distingue por su menor densidad (2.65 g/cm³), menor índice de refracción (1.560) y velos de fundente opacos característicos.',
+    example: 'Inclusión de velo en encaje blanco-anaranjado de fundente residual en sintético Chatham.'
+  },
+  {
+    term: 'Doblete de Berilo y Espinela Sintética',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Gema compuesta artificial consistente en dos fragmentos ensamblados (corona de berilo incoloro o espinela sintética y pabellón similar) unidos por una película de pegamento verde.',
+    simpleExplanation: 'Una piedra falsa hecha pegando dos trozos transparentes con una lámina de pegante verde en la cintura.',
+    emeraldApplication: 'Fraude común en el mercado informal. Se descubre fácilmente sumergiendo la gema en agua o aceite y observándola de perfil.',
+    example: 'Separación del plano de pegado en el filetín visible bajo inmersión en agua.'
+  },
+  {
+    term: 'Triplete de Soldadura Verde',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Pieza ensamblada de tres partes: una corona de cuarzo o berilo pálido, una lámina central delgada de vidrio verde oscuro y un culatín de gema natural o vidrio.',
+    simpleExplanation: 'Un sándwich de tres capas donde el color verde solo existe en la lámina delgada del centro.',
+    emeraldApplication: 'Detección por microscopía donde se evidencia la doble capa de pegamento y burbujas planas en el empalme.',
+    example: 'Triplete desmontado al someterlo a calor suave o disolventes orgánicos.'
+  },
+  {
+    term: 'Vidrio de Plomo / Estrás Verde',
+    category: 'Tratamientos & Laboratorio',
+    rigorousDefinition: 'Silicato vítreo sintético dopado con plomo y coloreado con óxido de cromo o cobre, amorfo e isótropo.',
+    simpleExplanation: 'Cristal o vidrio común pintado de verde usado en bisutería económica.',
+    emeraldApplication: 'Carece de birrefringencia, presenta burbujas esféricas perfectas y un índice de refracción variable (1.50 a 1.65) ajeno al berilo.',
+    example: 'Rotura concoidea y aristas melladas con suavidad táctil típica del vidrio.'
+  },
+  // --- TALLA, LAPIDACIÓN Y GEMOTECNIA ---
+  {
+    term: 'Dop y Cera de Dopado',
+    category: 'Talla & Lapidación',
+    rigorousDefinition: 'Vástago metálico de fijación sobre el cual se adhiere mecánicamente el cristal de esmeralda usando lacre termoplástico o cera de abejas con colofonia para permitir su facetado.',
+    simpleExplanation: 'El palito de metal donde el tallador pega la esmeralda con cera caliente para poder cortarla.',
+    emeraldApplication: 'El calentamiento excesivo durante el dopado puede expandir el fluido de las inclusiones trifásicas y reventar la esmeralda.',
+    example: 'Uso de dop frío con pegamento cianoacrilato para esmeraldas de alto riesgo térmico.'
+  },
+  {
+    term: 'Lapidación con Diamantina (Polvo de Diamante)',
+    category: 'Talla & Lapidación',
+    rigorousDefinition: 'Abrasivo microcristalino graduado en micrómetros (mesh de 600 a 50,000) aglomerado en aceite o agua utilizado sobre platos de bronce o estaño para desbaste y pulido.',
+    simpleExplanation: 'El polvo fino de diamante industrial usado en los platos giratorios para pulir las caras de la esmeralda.',
+    emeraldApplication: 'El pulido final de la tabla de la esmeralda se realiza a bajas revoluciones con diamantina de 0.5 a 1 micra para evitar sobrecalentamiento.',
+    example: 'Disco de aleación estaño-plomo cargado con pasta de diamante de 50,000 mesh.'
+  },
+  {
+    term: 'Ventaneo (Windowing)',
+    category: 'Talla & Lapidación',
+    rigorousDefinition: 'Defecto óptico en gemas facetadas producido cuando los ángulos del pabellón son inferiores al ángulo crítico, provocando que la luz escape por la base en vez de reflejarse hacia la corona.',
+    simpleExplanation: 'Cuando una esmeralda queda transparente como un vidrio de ventana en el centro y se puede leer un texto a través de ella.',
+    emeraldApplication: 'Ocurre cuando el lapidario talla una gema demasiado plana para retener peso en quilates, arruinando la saturación del color.',
+    example: 'Lectura visible de una línea de texto a través de la tabla por efecto de ventaneo excesivo.'
+  },
+  {
+    term: 'Extinción Óptica en Pabellón',
+    category: 'Talla & Lapidación',
+    rigorousDefinition: 'Zona oscura y apagada en el centro de una gema facetada causada por un pabellón excesivamente profundo que atrapa o refracta la luz fuera del cono visual del observador.',
+    simpleExplanation: 'Cuando la piedra se ve negra y sin brillo en el centro porque quedó demasiado culatona.',
+    emeraldApplication: 'Arruina la vivacidad de esmeraldas oscuras tipo Muzo si los ángulos de culata superan los 44 grados.',
+    example: 'Sombra negra central en la tabla por exceso de profundidad de culata.'
+  },
+  {
+    term: 'Bisel de Esquina (Corner Facets)',
+    category: 'Talla & Lapidación',
+    rigorousDefinition: 'Facetas truncadas a 45 grados en las cuatro esquinas de la talla esmeralda rectangular diseñadas para sustituir vértices agudos por aristas romas.',
+    simpleExplanation: 'Las esquinas recortadas de la típica forma octagonal de la esmeralda.',
+    emeraldApplication: 'Protege la piedra de estrellarse o romperse cuando el joyero dobla las uñas de oro durante el engaste.',
+    example: 'Cuatro chaflanes o esquinas de seguridad características de la talla octagonal.'
+  },
+  {
+    term: 'Talla Cabujón (Cabochon Cut)',
+    category: 'Talla & Lapidación',
+    rigorousDefinition: 'Estilo de corte no facetado con superficie superior convexa pulida lisa y base plana o ligeramente cóncava.',
+    simpleExplanation: 'Corte redondeado y liso en forma de cúpula sin caras geométricas.',
+    emeraldApplication: 'Obligatorio para esmeraldas trapiche para preservar el núcleo de seis brazos y para gemas muy ricas en inclusiones ("jardín") que no resistirían el facetado.',
+    example: 'Cabujón de esmeralda trapiche de Muzo de 8.50 quilates.'
+  },
+  // --- COMERCIO, ECONOMÍA Y CADENA DE CUSTODIA ---
+  {
+    term: 'Lote y Canutillo',
+    category: 'Comercio & Economía',
+    rigorousDefinition: 'Términos vernáculos del comercio de Bogotá: "lote" hace referencia a un paquete conjunto de gemas en bruto o talladas clasificadas por calidad; "canutillo" se refiere al cristal prismático hexagonal perfecto en bruto.',
+    simpleExplanation: 'Palabras tradicionales del negocio esmeraldero para un paquete de piedras o para un cristal cilíndrico entero.',
+    emeraldApplication: 'En la Plaza del Rosario los lotes se negocian abiertos sobre papel blanco perla sin clasificar individualmente.',
+    example: 'Canutillo cristalino de Chivor de 12 quilates comercializado en bruto.'
+  },
+  {
+    term: 'Moralla',
+    category: 'Comercio & Economía',
+    rigorousDefinition: 'Material de esmeralda de baja calidad comercial, muy opaco, lechoso o intensamente fracturado, no apto para joyería fina.',
+    simpleExplanation: 'Piedras de esmeralda de poca calidad, usadas para artesanías, tallas rústicas o cuentas de collar baratas.',
+    emeraldApplication: 'Se vende por peso en gramos o kilos para manufactura de bisutería y colecciones minerales educativas.',
+    example: 'Kilo de moralla verde para trituración y artesanías ornamentales en Boyacá.'
+  },
+  {
+    term: 'Comisión de Corretaje (Enganche)',
+    category: 'Comercio & Economía',
+    rigorousDefinition: 'Porcentaje pactado consuetudinariamente que percibe el intermediario o comisionista que conecta al poseedor de la gema con el comprador final en el mercado informal o formal.',
+    simpleExplanation: 'El porcentaje que gana el comisionista por ayudar a vender una esmeralda.',
+    emeraldApplication: 'Tradicionalmente oscila entre el 1% y el 5% según el volumen y quilataje negociado en la calle 12 de Bogotá.',
+    example: 'Cierre de negocio de un lote con entrega de comisión del 3% al corredor.'
+  },
+  {
+    term: 'Pasaporte Gemológico Digital Blockchain',
+    category: 'Comercio & Economía',
+    rigorousDefinition: 'Ficha criptográfica inmutable vinculada al número de serie de un certificado de laboratorio que registra cada transferencia de custodia y huella espectral de la gema en una cadena de bloques.',
+    simpleExplanation: 'El documento digital moderno e infalsificable que acompaña a la esmeralda por internet desde la mina hasta el cliente final.',
+    emeraldApplication: 'Permite a compradores de Nueva York, Ginebra o Tokio verificar en un segundo el origen ético y los análisis de laboratorio de una esmeralda colombiana.',
+    example: 'Código QR en factura de venta que abre el pasaporte digital con hash criptográfico SHA-256.'
+  },
+  {
+    term: 'Fondo Nacional de la Esmeralda (FNE)',
+    category: 'Normativa & Legal',
+    rigorousDefinition: 'Fondo parafiscal administrado por Fedesmeraldas alimentado por la contribución de los exportadores e inversionistas para financiar investigación, formalización minera y bienestar social en Boyacá.',
+    simpleExplanation: 'El fondo económico gremial que apoya a las comunidades mineras y promueve la esmeralda colombiana en el mundo.',
+    emeraldApplication: 'Financia los programas de capacitación tecnológica y los proyectos de desarrollo en Muzo, Coscuez, Chivor y Maripí.',
+    example: 'Aporte parafiscal liquidado antes del visado aduanero de exportación.'
   }
 ];

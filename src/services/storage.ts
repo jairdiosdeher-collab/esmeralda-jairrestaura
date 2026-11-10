@@ -52,24 +52,153 @@ export class StorageService {
     return list.find(s => s.id.toLowerCase() === id.toLowerCase());
   }
 
-  static saveEmerald(stone: EmeraldStone): { success: boolean; message?: string } {
+  static saveEmerald(stone: EmeraldStone, changeReason?: string): { success: boolean; message?: string } {
     const list = this.getEmeralds();
     const index = list.findIndex(s => s.id.toLowerCase() === stone.id.toLowerCase());
+    const now = new Date().toISOString();
     
     if (index >= 0) {
-      // Update
-      list[index] = { ...stone, updatedAt: new Date().toISOString() };
+      // Update with audit trail entry
+      const existingHistory = list[index].modificationHistory || [];
+      const newEntry = {
+        id: `LOG-${Date.now()}`,
+        date: now,
+        action: 'Actualización de datos',
+        details: changeReason || 'Modificación de parámetros gemológicos, comerciales o de custodia.'
+      };
+      
+      list[index] = { 
+        ...stone, 
+        modificationHistory: [newEntry, ...existingHistory],
+        updatedAt: now 
+      };
     } else {
       // Check duplicate ID
       const exists = list.some(s => s.id.trim().toLowerCase() === stone.id.trim().toLowerCase());
       if (exists) {
         return { success: false, message: `Ya existe una esmeralda con el código ${stone.id}` };
       }
-      list.unshift({ ...stone, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+      const initialEntry = {
+        id: `LOG-${Date.now()}`,
+        date: now,
+        action: 'Creación de registro',
+        details: 'Ingreso inicial de la pieza al inventario inteligente.'
+      };
+      list.unshift({ 
+        ...stone, 
+        modificationHistory: stone.modificationHistory && stone.modificationHistory.length > 0 
+          ? stone.modificationHistory 
+          : [initialEntry],
+        createdAt: now, 
+        updatedAt: now 
+      });
     }
 
     this.saveEmeralds(list);
     return { success: true };
+  }
+
+  static addCustodyTransfer(stoneId: string, entry: any): boolean {
+    const list = this.getEmeralds();
+    const index = list.findIndex(s => s.id.toLowerCase() === stoneId.toLowerCase());
+    if (index >= 0) {
+      const stone = list[index];
+      const custody = stone.custodyHistory || [];
+      const log = stone.modificationHistory || [];
+      
+      const newTransfer = {
+        ...entry,
+        id: entry.id || `CUS-${Date.now()}`,
+        date: entry.date || new Date().toISOString()
+      };
+      
+      const newLog = {
+        id: `LOG-${Date.now()}`,
+        date: new Date().toISOString(),
+        action: 'Traslado de custodia',
+        details: `Traslado desde ${entry.fromParty} hacia ${entry.toParty} (${entry.purpose}). Ubicación: ${entry.location}.`
+      };
+
+      list[index] = {
+        ...stone,
+        location: entry.location || stone.location,
+        custodyHistory: [newTransfer, ...custody],
+        modificationHistory: [newLog, ...log],
+        updatedAt: new Date().toISOString()
+      };
+
+      this.saveEmeralds(list);
+      return true;
+    }
+    return false;
+  }
+
+  static addDocumentRecord(stoneId: string, doc: any): boolean {
+    const list = this.getEmeralds();
+    const index = list.findIndex(s => s.id.toLowerCase() === stoneId.toLowerCase());
+    if (index >= 0) {
+      const stone = list[index];
+      const docs = stone.associatedDocuments || [];
+      const log = stone.modificationHistory || [];
+      
+      const newDoc = {
+        ...doc,
+        id: doc.id || `DOC-${Date.now()}`,
+        issueDate: doc.issueDate || new Date().toISOString().split('T')[0]
+      };
+
+      const newLog = {
+        id: `LOG-${Date.now()}`,
+        date: new Date().toISOString(),
+        action: 'Anexo de documento legal/comercial',
+        details: `Asociado ${doc.type.toUpperCase()}: ${doc.documentNumber} (${doc.entityName}).`
+      };
+
+      list[index] = {
+        ...stone,
+        associatedDocuments: [newDoc, ...docs],
+        modificationHistory: [newLog, ...log],
+        updatedAt: new Date().toISOString()
+      };
+
+      this.saveEmeralds(list);
+      return true;
+    }
+    return false;
+  }
+
+  static addGemologicalObservation(stoneId: string, obs: any): boolean {
+    const list = this.getEmeralds();
+    const index = list.findIndex(s => s.id.toLowerCase() === stoneId.toLowerCase());
+    if (index >= 0) {
+      const stone = list[index];
+      const observations = stone.gemologicalObservations || [];
+      const log = stone.modificationHistory || [];
+
+      const newObs = {
+        ...obs,
+        id: obs.id || `OBS-${Date.now()}`,
+        date: obs.date || new Date().toISOString()
+      };
+
+      const newLog = {
+        id: `LOG-${Date.now()}`,
+        date: new Date().toISOString(),
+        action: 'Registro de observación gemológica',
+        details: `Evaluación instrumental por ${obs.observerName || 'Gemólogo'}. Dictamen: ${obs.conclusion || 'Registrado'}`
+      };
+
+      list[index] = {
+        ...stone,
+        gemologicalObservations: [newObs, ...observations],
+        modificationHistory: [newLog, ...log],
+        updatedAt: new Date().toISOString()
+      };
+
+      this.saveEmeralds(list);
+      return true;
+    }
+    return false;
   }
 
   static deleteEmerald(id: string): boolean {
@@ -227,13 +356,18 @@ export class StorageService {
     const headers = [
       'ID',
       'Referencia',
+      'Clasificacion_Lote',
       'Estado',
       'Comercial',
       'Origen',
       'Quilates',
+      'Gramos',
       'Talla',
       'Color',
       'Tratamiento',
+      'Procedencia_Declarada',
+      'Documento_Soporte',
+      'Proveedor',
       'Certificado',
       'Laboratorio',
       'Precio_USD',
@@ -244,13 +378,18 @@ export class StorageService {
     const rows = emeralds.map(e => [
       `"${e.id}"`,
       `"${e.reference}"`,
+      `"${e.lotClassification || 'Piedra Suelta'}"`,
       `"${e.status}"`,
       `"${e.commercialStatus}"`,
       `"${e.origin}"`,
       e.weightCarats,
+      (e.weightCarats * 0.2).toFixed(3),
       `"${e.cutShape}"`,
       `"${e.colorTone}"`,
       `"${e.treatment}"`,
+      `"${e.declaredProvenance || 'No declarada'}"`,
+      `"${e.documentNumber || ''}"`,
+      `"${e.supplierName || ''}"`,
       `"${e.certificateNumber || ''}"`,
       `"${e.certificateLab || ''}"`,
       e.estimatedPriceUsd || '',
@@ -270,37 +409,315 @@ export class StorageService {
     URL.revokeObjectURL(url);
   }
 
-  // Backup Import
-  static importBackup(jsonString: string): { success: boolean; message: string } {
+  // Export CSV for Commercial Operations
+  static exportOperationsCsv(): void {
+    const ops = this.getOperations();
+    const headers = [
+      'ID',
+      'Tipo',
+      'Fecha',
+      'Gema_ID',
+      'Referencia',
+      'Contraparte',
+      'Tipo_Contraparte',
+      'RUCOM',
+      'NIT_Cedula',
+      'Monto_USD',
+      'Monto_COP',
+      'Medio_Pago',
+      'Soporte_Legal',
+      'Factura_Recibo'
+    ];
+
+    const rows = ops.map(o => [
+      `"${o.id}"`,
+      `"${o.type.toUpperCase()}"`,
+      `"${o.date}"`,
+      `"${o.stoneId}"`,
+      `"${o.stoneRef}"`,
+      `"${o.counterpartName}"`,
+      `"${o.counterpartType || 'Comercial'}"`,
+      `"${o.counterpartRucom || ''}"`,
+      `"${o.counterpartNitOrId || ''}"`,
+      o.amountUsd,
+      o.amountCop,
+      `"${o.paymentMethod}"`,
+      `"${o.legalSupportType || 'Soporte Interno'}"`,
+      `"${o.invoiceNumber || ''}"`
+    ]);
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `operaciones_comerciales_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Export CSV for Cutting Work Orders
+  static exportWorkOrdersCsv(): void {
+    const orders = this.getWorkOrders();
+    const headers = [
+      'Codigo_OT',
+      'Gema_ID',
+      'Descripcion_Bruto',
+      'Peso_Inicial_Ct',
+      'Peso_Final_Ct',
+      'Rendimiento_Porcentaje',
+      'Merma_Quilates',
+      'Talla_Objetivo',
+      'Maestro_Tallador',
+      'Taller',
+      'Estado',
+      'Fecha_Inicio',
+      'Fecha_Entrega',
+      'Costo_Mano_Obra_COP'
+    ];
+
+    const rows = orders.map(o => {
+      const finalWeight = o.finalWeightCarats || 0;
+      const yieldPct = o.yieldPercentage || (finalWeight > 0 ? (finalWeight / o.initialWeightCarats) * 100 : 0);
+      const lossCarats = o.initialWeightCarats - finalWeight;
+
+      return [
+        `"${o.code}"`,
+        `"${o.stoneId || ''}"`,
+        `"${o.roughDescription}"`,
+        o.initialWeightCarats,
+        finalWeight,
+        yieldPct.toFixed(2),
+        lossCarats > 0 ? lossCarats.toFixed(2) : 0,
+        `"${o.targetCutShape}"`,
+        `"${o.masterCutter}"`,
+        `"${o.workshopName}"`,
+        `"${o.status}"`,
+        `"${o.startDate}"`,
+        `"${o.estimatedDeliveryDate}"`,
+        o.laborCostCop
+      ];
+    });
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ordenes_talla_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Validar archivo de respaldo antes de tocar datos
+  static validateBackupFile(jsonString: string): {
+    valid: boolean;
+    error?: string;
+    metadata?: { platform?: string; version?: string; exportedAt?: string };
+    summary: {
+      emeraldsCount: number;
+      workOrdersCount: number;
+      quotesCount: number;
+      operationsCount: number;
+      directoryCount: number;
+      corruptRecordsCount: number;
+    };
+    duplicates: {
+      existingEmeraldIds: string[];
+      newEmeraldIds: string[];
+    };
+    cleanData?: {
+      emeralds: EmeraldStone[];
+      workOrders: CuttingWorkOrder[];
+      quotes: CommercialQuote[];
+      operations: TradeOperation[];
+      directory: DirectoryProfile[];
+    };
+  } {
     try {
       const data = JSON.parse(jsonString);
       if (!data || typeof data !== 'object') {
-        return { success: false, message: 'El archivo no contiene un formato JSON válido.' };
+        return {
+          valid: false,
+          error: 'El archivo no contiene una estructura JSON válida.',
+          summary: { emeraldsCount: 0, workOrdersCount: 0, quotesCount: 0, operationsCount: 0, directoryCount: 0, corruptRecordsCount: 0 },
+          duplicates: { existingEmeraldIds: [], newEmeraldIds: [] }
+        };
       }
 
-      if (Array.isArray(data.emeralds)) {
-        this.saveEmeralds(data.emeralds);
-      }
-      if (Array.isArray(data.workOrders)) {
-        this.saveWorkOrders(data.workOrders);
-      }
-      if (Array.isArray(data.quotes)) {
-        this.saveQuotes(data.quotes);
-      }
-      if (Array.isArray(data.operations)) {
-        this.saveOperations(data.operations);
-      }
-      if (Array.isArray(data.directory)) {
-        this.saveDirectory(data.directory);
+      const currentEmeralds = this.getEmeralds();
+      const currentIds = new Set(currentEmeralds.map(e => e.id.trim().toLowerCase()));
+
+      const rawEmeralds = Array.isArray(data.emeralds) ? data.emeralds : [];
+      const validEmeralds: EmeraldStone[] = [];
+      let corruptCount = 0;
+
+      for (const item of rawEmeralds) {
+        if (item && typeof item === 'object' && item.id && item.reference && typeof item.weightCarats === 'number' && !isNaN(item.weightCarats)) {
+          validEmeralds.push(item);
+        } else {
+          corruptCount++;
+        }
       }
 
-      return { 
-        success: true, 
-        message: `Respaldo restaurado con éxito (${data.emeralds?.length || 0} esmeraldas cargadas).` 
+      const duplicateEmeraldIds: string[] = [];
+      const newEmeraldIds: string[] = [];
+
+      for (const e of validEmeralds) {
+        if (currentIds.has(e.id.trim().toLowerCase())) {
+          duplicateEmeraldIds.push(e.id);
+        } else {
+          newEmeraldIds.push(e.id);
+        }
+      }
+
+      const validWorkOrders = Array.isArray(data.workOrders) ? data.workOrders.filter((w: any) => w && w.id) : [];
+      const validQuotes = Array.isArray(data.quotes) ? data.quotes.filter((q: any) => q && q.id) : [];
+      const validOperations = Array.isArray(data.operations) ? data.operations.filter((o: any) => o && o.id) : [];
+      const validDirectory = Array.isArray(data.directory) ? data.directory.filter((d: any) => d && d.id) : [];
+
+      return {
+        valid: true,
+        metadata: {
+          platform: data.platform || 'Desconocida',
+          version: data.version || '1.0',
+          exportedAt: data.exportedAt || 'Fecha no registrada'
+        },
+        summary: {
+          emeraldsCount: validEmeralds.length,
+          workOrdersCount: validWorkOrders.length,
+          quotesCount: validQuotes.length,
+          operationsCount: validOperations.length,
+          directoryCount: validDirectory.length,
+          corruptRecordsCount: corruptCount
+        },
+        duplicates: {
+          existingEmeraldIds: duplicateEmeraldIds,
+          newEmeraldIds
+        },
+        cleanData: {
+          emeralds: validEmeralds,
+          workOrders: validWorkOrders,
+          quotes: validQuotes,
+          operations: validOperations,
+          directory: validDirectory
+        }
       };
-    } catch (e: any) {
-      return { success: false, message: `Error al procesar el archivo de respaldo: ${e.message}` };
+    } catch (err: any) {
+      return {
+        valid: false,
+        error: `Error de sintaxis o archivo JSON corrupto: ${err.message}`,
+        summary: { emeraldsCount: 0, workOrdersCount: 0, quotesCount: 0, operationsCount: 0, directoryCount: 0, corruptRecordsCount: 0 },
+        duplicates: { existingEmeraldIds: [], newEmeraldIds: [] }
+      };
     }
+  }
+
+  // Restaurar respaldo con estrategia controlada (Fusión vs Reemplazo)
+  static restoreBackupWithStrategy(
+    cleanData: {
+      emeralds: EmeraldStone[];
+      workOrders: CuttingWorkOrder[];
+      quotes: CommercialQuote[];
+      operations: TradeOperation[];
+      directory: DirectoryProfile[];
+    },
+    strategy: 'merge' | 'replace'
+  ): { success: boolean; message: string; details: { addedCount: number; preservedCount: number } } {
+    if (strategy === 'replace') {
+      this.saveEmeralds(cleanData.emeralds);
+      this.saveWorkOrders(cleanData.workOrders);
+      this.saveQuotes(cleanData.quotes);
+      this.saveOperations(cleanData.operations);
+      this.saveDirectory(cleanData.directory);
+      return {
+        success: true,
+        message: `Restauración completa: se reemplazaron los registros con ${cleanData.emeralds.length} esmeraldas del archivo.`,
+        details: { addedCount: cleanData.emeralds.length, preservedCount: 0 }
+      };
+    }
+
+    // Estrategia de fusión segura (Merge sin sobrescritura)
+    const currentEmeralds = this.getEmeralds();
+    const existingMap = new Map(currentEmeralds.map(e => [e.id.trim().toLowerCase(), e]));
+    let addedCount = 0;
+    let preservedCount = 0;
+
+    for (const stone of cleanData.emeralds) {
+      const key = stone.id.trim().toLowerCase();
+      if (!existingMap.has(key)) {
+        currentEmeralds.push(stone);
+        existingMap.set(key, stone);
+        addedCount++;
+      } else {
+        preservedCount++;
+      }
+    }
+    this.saveEmeralds(currentEmeralds);
+
+    // Fusionar órdenes de trabajo
+    const currentOrders = this.getWorkOrders();
+    const orderIds = new Set(currentOrders.map(o => o.id));
+    for (const o of cleanData.workOrders) {
+      if (!orderIds.has(o.id)) {
+        currentOrders.push(o);
+        orderIds.add(o.id);
+      }
+    }
+    this.saveWorkOrders(currentOrders);
+
+    // Fusionar cotizaciones
+    const currentQuotes = this.getQuotes();
+    const quoteIds = new Set(currentQuotes.map(q => q.id));
+    for (const q of cleanData.quotes) {
+      if (!quoteIds.has(q.id)) {
+        currentQuotes.push(q);
+        quoteIds.add(q.id);
+      }
+    }
+    this.saveQuotes(currentQuotes);
+
+    // Fusionar operaciones
+    const currentOps = this.getOperations();
+    const opIds = new Set(currentOps.map(o => o.id));
+    for (const o of cleanData.operations) {
+      if (!opIds.has(o.id)) {
+        currentOps.push(o);
+        opIds.add(o.id);
+      }
+    }
+    this.saveOperations(currentOps);
+
+    // Fusionar directorio
+    const currentDir = this.getDirectory();
+    const dirIds = new Set(currentDir.map(d => d.id));
+    for (const d of cleanData.directory) {
+      if (!dirIds.has(d.id)) {
+        currentDir.push(d);
+        dirIds.add(d.id);
+      }
+    }
+    this.saveDirectory(currentDir);
+
+    return {
+      success: true,
+      message: `Fusión exitosa: se agregaron ${addedCount} esmeraldas nuevas y se conservaron intactas ${preservedCount} esmeraldas ya existentes.`,
+      details: { addedCount, preservedCount }
+    };
+  }
+
+  // Backup Import backward compatibility
+  static importBackup(jsonString: string): { success: boolean; message: string } {
+    const val = this.validateBackupFile(jsonString);
+    if (!val.valid || !val.cleanData) {
+      return { success: false, message: val.error || 'Archivo inválido.' };
+    }
+    const res = this.restoreBackupWithStrategy(val.cleanData, 'merge');
+    return { success: res.success, message: res.message };
   }
 
   // Reset to clean sample

@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: #030712;
+    color: #f1f5f9;
+  }
+
+  h1, h2, h3, .font-emerald-heading {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Custom Emerald Glow and Glassmorphism */
+.emerald-gradient-bg {
+  background: radial-gradient(circle at 50% 0%, rgba(5, 150, 105, 0.18) 0%, rgba(2, 44, 34, 0.4) 40%, rgba(3, 7, 18, 0.95) 85%);
+}
+
+.emerald-card-glow {
+  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.12);
+}
+
+.emerald-border-glow {
+  border-color: rgba(52, 211, 153, 0.25);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 50%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.emerald-gradient-text {
+  background: linear-gradient(135deg, #a7f3d0 0%, #34d399 50%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Print Styles for Printable Digital Passport, Quotes, and Academic Certificates */
+@media print {
+  @page {
+    size: auto;
+    margin: 8mm;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-page {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    color: #111827 !important;
+    background: #ffffff !important;
+  }
+}

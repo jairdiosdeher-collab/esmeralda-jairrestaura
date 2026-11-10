@@ -18,7 +18,8 @@ import {
   FileCheck,
   Building2,
   Check,
-  AlertCircle
+  AlertCircle,
+  Activity
 } from 'lucide-react';
 import { DiplomaCourseViewer } from './DiplomaCourseViewer';
 import { AtlasViewer } from './AtlasViewer';
@@ -26,11 +27,12 @@ import { GlossaryViewer } from './GlossaryViewer';
 import { CertificateGenerator } from './CertificateGenerator';
 import { CertificateValidator } from './CertificateValidator';
 import { FinalExamSimulator } from './FinalExamSimulator';
+import { VirtualGemLab } from './VirtualGemLab';
 import { AcademyStorageService } from '../../services/academyStorage';
 import { StudentProgress } from '../../types/academy';
 
 export const EmeraldAcademy: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'diplomado' | 'examen_final' | 'atlas' | 'glosario' | 'certificado' | 'verificar' | 'biblioteca'>('diplomado');
+  const [activeTab, setActiveTab] = useState<'diplomado' | 'laboratorio' | 'examen_final' | 'atlas' | 'glosario' | 'certificado' | 'verificar' | 'biblioteca'>('diplomado');
   const [progress, setProgress] = useState<StudentProgress>(AcademyStorageService.getProgress());
   const [importNotification, setImportNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -284,6 +286,18 @@ export const EmeraldAcademy: React.FC = () => {
         </button>
 
         <button
+          onClick={() => setActiveTab('laboratorio')}
+          className={`px-4 py-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 flex items-center gap-1.5 whitespace-nowrap ${
+            activeTab === 'laboratorio'
+              ? 'border-emerald-400 text-emerald-300 bg-emerald-950/40 font-extrabold shadow'
+              : 'border-transparent text-emerald-400/80 hover:text-emerald-300'
+          }`}
+        >
+          <Activity className="w-4 h-4 text-emerald-400" />
+          <span>Laboratorio Virtual</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab('examen_final')}
           className={`px-4 py-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 flex items-center gap-1.5 whitespace-nowrap ${
             activeTab === 'examen_final'
@@ -361,6 +375,11 @@ export const EmeraldAcademy: React.FC = () => {
         <DiplomaCourseViewer
           onRequestCertificate={() => setActiveTab('certificado')}
         />
+      )}
+
+      {/* Tab: Virtual Gemological Laboratory */}
+      {activeTab === 'laboratorio' && (
+        <VirtualGemLab />
       )}
 
       {/* Tab: Final Exam Simulator (50 Questions) */}

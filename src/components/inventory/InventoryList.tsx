@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { EmeraldStone } from '../../types';
+import { EmeraldStone, LotClassification } from '../../types';
 import { 
   Search, 
   Filter, 
@@ -16,7 +16,10 @@ import {
   Tag, 
   ShieldCheck, 
   Eye, 
-  ArrowUpDown 
+  ArrowUpDown,
+  AlertTriangle,
+  History,
+  FileCheck
 } from 'lucide-react';
 import { StorageService } from '../../services/storage';
 import { ConfirmModal } from '../common/ConfirmModal';
@@ -39,7 +42,8 @@ export const InventoryList: React.FC<InventoryListProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('todos');
   const [commercialFilter, setCommercialFilter] = useState<string>('todos');
-  const [originFilter, setOriginFilter] = useState<string>('todos');
+  const [lotFilter, setLotFilter] = useState<string>('todos');
+  const [docFilter, setDocFilter] = useState<string>('todos');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [sortBy, setSortBy] = useState<'reciente' | 'peso_desc' | 'peso_asc' | 'precio_desc'>('reciente');
   const [stoneToDelete, setStoneToDelete] = useState<EmeraldStone | null>(null);
@@ -52,13 +56,22 @@ export const InventoryList: React.FC<InventoryListProps> = ({
         stone.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         stone.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
         stone.colorTone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (stone.supplierName && stone.supplierName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (stone.supplierRucom && stone.supplierRucom.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (stone.certificateNumber && stone.certificateNumber.toLowerCase().includes(searchTerm.toLowerCase()));
 
       const matchStatus = statusFilter === 'todos' || stone.status === statusFilter;
       const matchCommercial = commercialFilter === 'todos' || stone.commercialStatus === commercialFilter;
-      const matchOrigin = originFilter === 'todos' || stone.origin === originFilter;
+      const matchLot = lotFilter === 'todos' || stone.lotClassification === lotFilter;
+      
+      const isPendingDoc = !stone.documentNumber || stone.declaredProvenance === 'Declaración Verbal No Soportada';
+      const matchDoc = docFilter === 'todos' 
+        ? true 
+        : docFilter === 'con_soporte' 
+          ? !isPendingDoc 
+          : isPendingDoc;
 
-      return matchSearch && matchStatus && matchCommercial && matchOrigin;
+      return matchSearch && matchStatus && matchCommercial && matchLot && matchDoc;
     })
     .sort((a, b) => {
       if (sortBy === 'peso_desc') return b.weightCarats - a.weightCarats;
@@ -69,6 +82,7 @@ export const InventoryList: React.FC<InventoryListProps> = ({
 
   const totalCarats = filtered.reduce((acc, s) => acc + s.weightCarats, 0);
   const totalValueUsd = filtered.reduce((acc, s) => acc + (s.estimatedPriceUsd || 0), 0);
+  const pendingDocsCount = emeralds.filter(s => !s.documentNumber || s.declaredProvenance === 'Declaración Verbal No Soportada').length;
 
   const handleDeleteConfirm = () => {
     if (stoneToDelete) {
@@ -117,7 +131,7 @@ export const InventoryList: React.FC<InventoryListProps> = ({
             Inventario Inteligente de Esmeraldas
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Gestión de gemas, trazabilidad gemológica, pasaportes QR y control de existencias
+            Gestión integral de gemas individuales y lotes, trazabilidad documental RUCOM, pasaporte QR y auditoría
           </p>
         </div>
 
@@ -125,7 +139,7 @@ export const InventoryList: React.FC<InventoryListProps> = ({
           <button
             onClick={() => StorageService.exportEmeraldsCsv()}
             className="p-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-emerald-800 rounded-xl flex items-center gap-1.5 transition-colors"
-            title="Exportar inventario a Excel/CSV"
+            title="Exportar inventario a Excel/CSV con trazabilidad completa"
           >
             <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
             <span className="hidden sm:inline">Exportar CSV</span>
@@ -145,11 +159,11 @@ export const InventoryList: React.FC<InventoryListProps> = ({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-3.5 bg-slate-900/80 border border-emerald-950 rounded-2xl">
           <span className="text-[11px] font-medium text-slate-400 block">Total en Inventario</span>
-          <span className="text-xl font-bold text-white font-emerald-heading">{emeralds.length} <span className="text-xs font-normal text-slate-400">piedras</span></span>
+          <span className="text-xl font-bold text-white font-emerald-heading">{emeralds.length} <span className="text-xs font-normal text-slate-400">piezas</span></span>
         </div>
 
         <div className="p-3.5 bg-slate-900/80 border border-emerald-950 rounded-2xl">
-          <span className="text-[11px] font-medium text-slate-400 block">Quilataje Visible</span>
+          <span className="text-[11px] font-medium text-slate-400 block">Quilataje Registrado</span>
           <span className="text-xl font-bold text-emerald-300 font-emerald-heading">{totalCarats.toFixed(2)} <span className="text-xs font-normal text-slate-400">ct</span></span>
         </div>
 
@@ -161,10 +175,13 @@ export const InventoryList: React.FC<InventoryListProps> = ({
         </div>
 
         <div className="p-3.5 bg-slate-900/80 border border-emerald-950 rounded-2xl">
-          <span className="text-[11px] font-medium text-slate-400 block">Valor Referencial Est.</span>
-          <span className="text-xl font-bold text-white font-emerald-heading">
-            ${totalValueUsd.toLocaleString()} <span className="text-xs font-normal text-slate-400">USD</span>
-          </span>
+          <span className="text-[11px] font-medium text-slate-400 block">Alertas Documentales</span>
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <span className={`text-xl font-bold font-emerald-heading ${pendingDocsCount > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
+              {pendingDocsCount}
+            </span>
+            <span className="text-[10px] text-slate-400">sin soporte legal formal</span>
+          </div>
         </div>
       </div>
 
@@ -179,13 +196,28 @@ export const InventoryList: React.FC<InventoryListProps> = ({
               type="text"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              placeholder="Buscar por código (EMR-...), nombre, yacimiento Muzo/Chivor, certificado..."
+              placeholder="Buscar por código (EMR-...), nombre, yacimiento Muzo/Chivor, RUCOM, proveedor..."
               className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
             />
           </div>
 
           {/* Quick Select Filters */}
           <div className="flex flex-wrap items-center gap-2">
+            
+            {/* Lot Classification Filter */}
+            <select
+              value={lotFilter}
+              onChange={e => setLotFilter(e.target.value)}
+              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-emerald-500"
+            >
+              <option value="todos">Todos los Formatos</option>
+              <option value="Piedra Suelta">Piedra Suelta</option>
+              <option value="Lote / Paquete">Lote / Paquete</option>
+              <option value="Canutillo en Bruto">Canutillo en Bruto</option>
+              <option value="Moralla">Moralla</option>
+              <option value="Muestra de Colección">Muestra de Colección</option>
+            </select>
+
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
@@ -198,16 +230,13 @@ export const InventoryList: React.FC<InventoryListProps> = ({
             </select>
 
             <select
-              value={commercialFilter}
-              onChange={e => setCommercialFilter(e.target.value)}
+              value={docFilter}
+              onChange={e => setDocFilter(e.target.value)}
               className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-emerald-500"
             >
-              <option value="todos">Cualquier Estado Comercial</option>
-              <option value="disponible">Disponible</option>
-              <option value="reservado">Reservado</option>
-              <option value="en_talla">En Taller</option>
-              <option value="vendido">Vendido</option>
-              <option value="coleccion">Colección</option>
+              <option value="todos">Toda Documentación</option>
+              <option value="con_soporte">Con Soporte Legal / RUCOM</option>
+              <option value="sin_soporte">Doc. Pendiente / Sin Soporte</option>
             </select>
 
             <select
@@ -249,7 +278,7 @@ export const InventoryList: React.FC<InventoryListProps> = ({
           <Layers className="w-12 h-12 text-slate-600 mx-auto" />
           <h3 className="text-base font-bold text-white">No se encontraron esmeraldas</h3>
           <p className="text-xs text-slate-400 max-w-sm mx-auto">
-            No hay registros que coincidan con los filtros seleccionados o tu inventario aún no tiene piedras registradas.
+            No hay registros que coincidan con los filtros seleccionados o tu inventario aún no tiene piezas registradas.
           </p>
           <button
             onClick={onNewEmerald}
@@ -261,104 +290,138 @@ export const InventoryList: React.FC<InventoryListProps> = ({
         </div>
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map((stone) => (
-            <div 
-              key={stone.id}
-              className="bg-slate-900/90 border border-emerald-950 hover:border-emerald-700/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-emerald-950/40 transition-all flex flex-col group"
-            >
-              {/* Image & Badges */}
-              <div className="relative aspect-[4/3] bg-slate-950 overflow-hidden">
-                <img 
-                  src={stone.photos[0] || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80'} 
-                  alt={stone.reference}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  {getStatusBadge(stone.status)}
-                </div>
-                <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-slate-700 text-[10px] font-mono text-emerald-300">
-                  {stone.id}
-                </div>
-                <div className="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-full bg-slate-950/90 backdrop-blur-md border border-amber-500/40 text-xs font-bold text-amber-300">
-                  {stone.weightCarats} ct
-                </div>
-                <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-full bg-slate-950/90 backdrop-blur-md border border-slate-800">
-                  {getCommercialBadge(stone.commercialStatus)}
-                </div>
-              </div>
+          {filtered.map((stone) => {
+            const hasPendingDoc = !stone.documentNumber || stone.declaredProvenance === 'Declaración Verbal No Soportada';
+            const editCount = stone.modificationHistory?.length || 0;
 
-              {/* Info Body */}
-              <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                <div>
-                  <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors line-clamp-1 font-emerald-heading">
-                    {stone.reference}
-                  </h3>
-                  <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
-                    <span>{stone.origin}</span> • <span className="italic">{stone.cutShape}</span>
-                  </p>
+            return (
+              <div 
+                key={stone.id}
+                className="bg-slate-900/90 border border-emerald-950 hover:border-emerald-700/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-emerald-950/40 transition-all flex flex-col group"
+              >
+                {/* Image & Badges */}
+                <div className="relative aspect-[4/3] bg-slate-950 overflow-hidden">
+                  <img 
+                    src={stone.photos[0] || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80'} 
+                    alt={stone.reference}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-2.5 left-2.5 flex flex-wrap items-center gap-1.5">
+                    {getStatusBadge(stone.status)}
+                    {stone.lotClassification && (
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-900/80 backdrop-blur-md border border-slate-700 text-slate-300">
+                        {stone.lotClassification}
+                      </span>
+                    )}
+                  </div>
+                  <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-slate-700 text-[10px] font-mono text-emerald-300">
+                    {stone.id}
+                  </div>
+                  <div className="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-full bg-slate-950/90 backdrop-blur-md border border-amber-500/40 text-xs font-bold text-amber-300">
+                    {stone.weightCarats} ct {stone.weightGrams ? `(${(stone.weightGrams).toFixed(2)}g)` : ''}
+                  </div>
+                  <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-full bg-slate-950/90 backdrop-blur-md border border-slate-800">
+                    {getCommercialBadge(stone.commercialStatus)}
+                  </div>
                 </div>
 
-                <div className="space-y-1.5 text-xs border-t border-slate-800/80 pt-2.5">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Color:</span>
-                    <span className="font-medium text-emerald-200 line-clamp-1 text-right">{stone.colorTone}</span>
+                {/* Info Body */}
+                <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                  <div>
+                    <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors line-clamp-1 font-emerald-heading">
+                      {stone.reference}
+                    </h3>
+                    <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
+                      <span>{stone.origin}</span> • <span className="italic">{stone.cutShape}</span>
+                    </p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Certificado:</span>
-                    <span className="font-mono text-slate-300 text-right">{stone.certificateNumber || 'Sin certificado'}</span>
+
+                  {/* Traceability & Compliance Status Badge */}
+                  <div className="flex items-center justify-between text-[11px] pt-1">
+                    {hasPendingDoc ? (
+                      <span className="px-2 py-0.5 rounded-lg bg-amber-950/60 border border-amber-800/60 text-amber-300 text-[10px] font-semibold flex items-center gap-1">
+                        <AlertTriangle className="w-3 h-3 text-amber-400" />
+                        <span>Soporte legal pendiente</span>
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-lg bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 text-[10px] font-semibold flex items-center gap-1">
+                        <FileCheck className="w-3 h-3 text-emerald-400" />
+                        <span>{stone.declaredProvenance}</span>
+                      </span>
+                    )}
+
+                    {editCount > 0 && (
+                      <span className="text-[10px] text-slate-400 flex items-center gap-1" title={`${editCount} cambios auditados en historial`}>
+                        <History className="w-3 h-3 text-slate-500" />
+                        <span>{editCount} auditados</span>
+                      </span>
+                    )}
                   </div>
-                  {stone.estimatedPriceUsd && (
-                    <div className="flex justify-between items-baseline pt-1">
-                      <span className="text-slate-400">Precio Est.:</span>
-                      <span className="text-sm font-bold text-amber-300">
-                        ${stone.estimatedPriceUsd.toLocaleString()} USD
+
+                  <div className="space-y-1.5 text-xs border-t border-slate-800/80 pt-2.5">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Color / Transparencia:</span>
+                      <span className="font-medium text-emerald-200 line-clamp-1 text-right">{stone.colorTone}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Proveedor / RUCOM:</span>
+                      <span className="font-mono text-slate-300 text-right">
+                        {stone.supplierRucom ? `RUCOM: ${stone.supplierRucom}` : (stone.supplierName || 'No declarado')}
                       </span>
                     </div>
-                  )}
+                    {stone.estimatedPriceUsd && (
+                      <div className="flex justify-between items-baseline pt-1">
+                        <span className="text-slate-400">Precio Est.:</span>
+                        <span className="text-sm font-bold text-amber-300">
+                          ${stone.estimatedPriceUsd.toLocaleString()} USD
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Card Action Buttons */}
+                  <div className="grid grid-cols-4 gap-1.5 pt-2 border-t border-slate-800/80">
+                    <button
+                      onClick={() => onOpenPassport(stone)}
+                      className="p-2 text-xs font-semibold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 rounded-xl border border-emerald-800/50 flex flex-col items-center gap-0.5 transition-colors"
+                      title="Ver Pasaporte Digital, Código QR y Custodia"
+                    >
+                      <QrCode className="w-3.5 h-3.5" />
+                      <span className="text-[9px]">Pasaporte</span>
+                    </button>
+
+                    <button
+                      onClick={() => onOpenValuation(stone)}
+                      className="p-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-xl border border-slate-700 flex flex-col items-center gap-0.5 transition-colors"
+                      title="Valoración Asistida y Ensayo Gemológico"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span className="text-[9px]">Laboratorio</span>
+                    </button>
+
+                    <button
+                      onClick={() => onOpenEdit(stone)}
+                      className="p-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 flex flex-col items-center gap-0.5 transition-colors"
+                      title="Editar datos y registrar auditoría"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span className="text-[9px]">Editar</span>
+                    </button>
+
+                    <button
+                      onClick={() => setStoneToDelete(stone)}
+                      className="p-2 text-xs font-semibold bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-xl border border-rose-800/40 flex flex-col items-center gap-0.5 transition-colors"
+                      title="Eliminar de inventario"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span className="text-[9px]">Borrar</span>
+                    </button>
+                  </div>
+
                 </div>
-
-                {/* Card Action Buttons */}
-                <div className="grid grid-cols-4 gap-1.5 pt-2 border-t border-slate-800/80">
-                  <button
-                    onClick={() => onOpenPassport(stone)}
-                    className="p-2 text-xs font-semibold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 rounded-xl border border-emerald-800/50 flex flex-col items-center gap-0.5 transition-colors"
-                    title="Ver Pasaporte Digital y Código QR"
-                  >
-                    <QrCode className="w-3.5 h-3.5" />
-                    <span className="text-[9px]">Pasaporte</span>
-                  </button>
-
-                  <button
-                    onClick={() => onOpenValuation(stone)}
-                    className="p-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-xl border border-slate-700 flex flex-col items-center gap-0.5 transition-colors"
-                    title="Valoración Asistida por IA"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span className="text-[9px]">Valorar</span>
-                  </button>
-
-                  <button
-                    onClick={() => onOpenEdit(stone)}
-                    className="p-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 flex flex-col items-center gap-0.5 transition-colors"
-                    title="Editar datos de la esmeralda"
-                  >
-                    <Edit3 className="w-3.5 h-3.5" />
-                    <span className="text-[9px]">Editar</span>
-                  </button>
-
-                  <button
-                    onClick={() => setStoneToDelete(stone)}
-                    className="p-2 text-xs font-semibold bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-xl border border-rose-800/40 flex flex-col items-center gap-0.5 transition-colors"
-                    title="Eliminar de inventario"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span className="text-[9px]">Borrar</span>
-                  </button>
-                </div>
-
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         /* Table View */
@@ -367,66 +430,82 @@ export const InventoryList: React.FC<InventoryListProps> = ({
             <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
               <tr>
                 <th className="py-3 px-4">Código</th>
-                <th className="py-3 px-4">Gema / Referencia</th>
+                <th className="py-3 px-4">Gema / Formato</th>
                 <th className="py-3 px-4">Origen</th>
-                <th className="py-3 px-4">Peso</th>
+                <th className="py-3 px-4">Peso (ct / g)</th>
                 <th className="py-3 px-4">Talla</th>
-                <th className="py-3 px-4">Tratamiento</th>
+                <th className="py-3 px-4">Trazabilidad / RUCOM</th>
                 <th className="py-3 px-4">Comercial</th>
                 <th className="py-3 px-4">Precio (USD)</th>
                 <th className="py-3 px-4 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60">
-              {filtered.map((stone) => (
-                <tr key={stone.id} className="hover:bg-slate-800/40 transition-colors">
-                  <td className="py-3 px-4 font-mono font-bold text-emerald-400">{stone.id}</td>
-                  <td className="py-3 px-4">
-                    <span className="font-semibold text-white block">{stone.reference}</span>
-                    <span className="text-[10px] text-slate-400">{stone.colorTone}</span>
-                  </td>
-                  <td className="py-3 px-4">{stone.origin}</td>
-                  <td className="py-3 px-4 font-bold text-white">{stone.weightCarats} ct</td>
-                  <td className="py-3 px-4">{stone.cutShape}</td>
-                  <td className="py-3 px-4 capitalize">{stone.treatment.replace('_', ' ')}</td>
-                  <td className="py-3 px-4">{getCommercialBadge(stone.commercialStatus)}</td>
-                  <td className="py-3 px-4 font-semibold text-amber-300">
-                    {stone.estimatedPriceUsd ? `$${stone.estimatedPriceUsd.toLocaleString()}` : '-'}
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <button
-                        onClick={() => onOpenPassport(stone)}
-                        className="p-1.5 bg-emerald-950 text-emerald-300 hover:bg-emerald-900 rounded-lg border border-emerald-800/60"
-                        title="Ver Pasaporte QR"
-                      >
-                        <QrCode className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => onOpenValuation(stone)}
-                        className="p-1.5 bg-slate-800 text-amber-300 hover:bg-slate-700 rounded-lg"
-                        title="Valorar con IA"
-                      >
-                        <Sparkles className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => onOpenEdit(stone)}
-                        className="p-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg"
-                        title="Editar"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => setStoneToDelete(stone)}
-                        className="p-1.5 bg-rose-950 text-rose-300 hover:bg-rose-900 rounded-lg"
-                        title="Eliminar"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {filtered.map((stone) => {
+                const hasPendingDoc = !stone.documentNumber || stone.declaredProvenance === 'Declaración Verbal No Soportada';
+                return (
+                  <tr key={stone.id} className="hover:bg-slate-800/40 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-emerald-400">{stone.id}</td>
+                    <td className="py-3 px-4">
+                      <span className="font-semibold text-white block">{stone.reference}</span>
+                      <span className="text-[10px] text-slate-400">{stone.lotClassification || 'Piedra Suelta'}</span>
+                    </td>
+                    <td className="py-3 px-4">{stone.origin}</td>
+                    <td className="py-3 px-4 font-bold text-white">
+                      {stone.weightCarats} ct
+                      {stone.weightGrams ? <span className="text-[10px] text-slate-400 block font-normal">{stone.weightGrams}g</span> : null}
+                    </td>
+                    <td className="py-3 px-4">{stone.cutShape}</td>
+                    <td className="py-3 px-4">
+                      {hasPendingDoc ? (
+                        <span className="text-amber-400 text-[10px] font-semibold flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" /> Sin soporte legal
+                        </span>
+                      ) : (
+                        <span className="text-emerald-300 text-[10px] font-medium flex items-center gap-1">
+                          <FileCheck className="w-3 h-3" /> {stone.supplierRucom ? `RUCOM ${stone.supplierRucom}` : stone.declaredProvenance}
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">{getCommercialBadge(stone.commercialStatus)}</td>
+                    <td className="py-3 px-4 font-semibold text-amber-300">
+                      {stone.estimatedPriceUsd ? `$${stone.estimatedPriceUsd.toLocaleString()}` : '-'}
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => onOpenPassport(stone)}
+                          className="p-1.5 bg-emerald-950 text-emerald-300 hover:bg-emerald-900 rounded-lg border border-emerald-800/60"
+                          title="Ver Pasaporte QR"
+                        >
+                          <QrCode className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => onOpenValuation(stone)}
+                          className="p-1.5 bg-slate-800 text-amber-300 hover:bg-slate-700 rounded-lg"
+                          title="Laboratorio & Valoración"
+                        >
+                          <Sparkles className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => onOpenEdit(stone)}
+                          className="p-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg"
+                          title="Editar"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => setStoneToDelete(stone)}
+                          className="p-1.5 bg-rose-950 text-rose-300 hover:bg-rose-900 rounded-lg"
+                          title="Eliminar"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

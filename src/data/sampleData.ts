@@ -38,6 +38,25 @@ export const SAMPLE_EMERALDS: EmeraldStone[] = [
     estimatedPriceUsd: 10200,
     location: 'Bóveda Principal - Bogotá D.C.',
     ownerName: 'Jair Restaura & Asociados',
+    lotClassification: 'Piedra Suelta',
+    declaredProvenance: 'Factura Legal (DIAN)',
+    documentNumber: 'FE-2025-8741',
+    supplierName: 'Sociedad Minera de Muzo S.A.S.',
+    supplierRucom: 'RUCOM-BOY-11024',
+    modificationHistory: [
+      { id: 'LOG-003', date: '2025-02-01T15:30:00Z', action: 'Actualización de avalúo', details: 'Ajuste de precio estimado a $10,200 USD tras certificación CDTEC.' },
+      { id: 'LOG-002', date: '2025-01-20T11:00:00Z', action: 'Emisión de Certificado', details: 'Emisión de certificado CDTEC-78241 con dictamen de aceite menor.' },
+      { id: 'LOG-001', date: '2025-01-15T10:00:00Z', action: 'Ingreso al Inventario', details: 'Registro inicial de la gema con factura FE-2025-8741.' }
+    ],
+    associatedDocuments: [
+      { id: 'DOC-01', type: 'factura', documentNumber: 'FE-2025-8741', entityName: 'DIAN / Factura Electrónica', issueDate: '2025-01-15', status: 'vigente' },
+      { id: 'DOC-02', type: 'rucom', documentNumber: 'RUCOM-BOY-11024', entityName: 'Agencia Nacional de Minería', issueDate: '2024-11-20', status: 'vigente' },
+      { id: 'DOC-03', type: 'certificado_lab', documentNumber: 'CDTEC-78241', entityName: 'CDTEC Colombia', issueDate: '2025-01-20', status: 'vigente' }
+    ],
+    custodyHistory: [
+      { id: 'CUS-02', date: '2025-01-25T09:00:00Z', fromParty: 'Taller de Lapidación Bogotá', toParty: 'Bóveda Principal Bogotá D.C.', purpose: 'Custodia en Bóveda', location: 'Bóveda Principal - Bogotá D.C.', notes: 'Recepción tras peritaje y pesaje final.' },
+      { id: 'CUS-01', date: '2025-01-15T14:00:00Z', fromParty: 'Sociedad Minera de Muzo', toParty: 'Jair Restaura & Asociados', purpose: 'Consignación Comercial', location: 'Oficina Comercial Candelaria', notes: 'Entrega física con guía de transporte.' }
+    ],
     photos: [
       'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'

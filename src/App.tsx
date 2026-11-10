@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { EmeraldStone, CuttingWorkOrder, CommercialQuote, TradeOperation, DirectoryProfile, AIAssistantId } from './types';
+import { Info, X } from 'lucide-react';
 import { StorageService } from './services/storage';
 import { Header } from './components/common/Header';
 import { Footer } from './components/common/Footer';
@@ -40,6 +41,7 @@ export default function App() {
 
   // Valuation context
   const [valuationInitialStone, setValuationInitialStone] = useState<EmeraldStone | null>(null);
+  const [notFoundPassportId, setNotFoundPassportId] = useState<string | null>(null);
 
   // Initial load and event listeners
   const loadAllData = () => {
@@ -69,6 +71,9 @@ export default function App() {
         if (stone) {
           setSelectedPassportStone(stone);
           setIsPassportModalOpen(true);
+          setNotFoundPassportId(null);
+        } else {
+          setNotFoundPassportId(id);
         }
       } else if (hash.startsWith('#certificado/')) {
         setCurrentTab('academia');
@@ -117,8 +122,8 @@ export default function App() {
     setIsFormModalOpen(true);
   };
 
-  const handleSaveEmerald = (stone: EmeraldStone) => {
-    return StorageService.saveEmerald(stone);
+  const handleSaveEmerald = (stone: EmeraldStone, reason?: string) => {
+    return StorageService.saveEmerald(stone, reason);
   };
 
   return (
@@ -254,6 +259,57 @@ export default function App() {
         }}
         onSave={handleSaveEmerald}
       />
+
+      {/* Local Storage Limitation Notice for Scanned QR on Another Device */}
+      {notFoundPassportId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
+          <div className="relative w-full max-w-md bg-slate-900 border border-amber-800/80 rounded-2xl p-6 shadow-2xl space-y-4">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-2.5 text-amber-400 font-bold font-emerald-heading text-base">
+                <Info className="w-5 h-5 shrink-0" />
+                <span>Pasaporte Local No Encontrado</span>
+              </div>
+              <button
+                onClick={() => {
+                  setNotFoundPassportId(null);
+                  if (window.location.hash.startsWith('#pasaporte/')) {
+                    history.pushState(null, '', window.location.pathname);
+                  }
+                }}
+                className="text-slate-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="text-xs text-slate-300 space-y-2 leading-relaxed">
+              <p>
+                La esmeralda con código <strong className="text-amber-300 font-mono">{notFoundPassportId}</strong> no se encuentra en el almacenamiento local de este navegador.
+              </p>
+              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-[11px] text-slate-400">
+                <strong>¿Por qué ocurre esto?</strong> Por privacidad y soberanía de datos, la plataforma almacena tus inventarios exclusivamente en el navegador local del usuario sin servidores centrales de terceros.
+              </div>
+              <p className="text-[11px] text-slate-400">
+                Para consultar esta pieza en este dispositivo, solicita al propietario que exporte una copia de seguridad en formato JSON (botón Respaldo en la barra superior) y cárgala en este equipo.
+              </p>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => {
+                  setNotFoundPassportId(null);
+                  if (window.location.hash.startsWith('#pasaporte/')) {
+                    history.pushState(null, '', window.location.pathname);
+                  }
+                }}
+                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl transition-colors"
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

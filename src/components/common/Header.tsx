@@ -69,6 +69,8 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'directorio', label: 'Directorio', icon: BookOpen },
   ];
 
+  const [pendingBackup, setPendingBackup] = useState<ReturnType<typeof StorageService.validateBackupFile> | null>(null);
+
   const handleBackupExport = () => {
     StorageService.exportFullBackup();
     setImportStatus('Respaldo descargado exitosamente');
@@ -88,16 +90,39 @@ export const Header: React.FC<HeaderProps> = ({
     const reader = new FileReader();
     reader.onload = (event) => {
       const content = event.target?.result as string;
-      const res = StorageService.importBackup(content);
-      setImportStatus(res.message);
-      if (res.success) {
-        setTimeout(() => {
-          setShowBackupModal(false);
-          setImportStatus(null);
-        }, 1500);
+      const validation = StorageService.validateBackupFile(content);
+      if (!validation.valid || !validation.cleanData) {
+        setImportStatus(`Error al validar: ${validation.error || 'Archivo inválido'}`);
+        setPendingBackup(null);
+      } else {
+        setPendingBackup(validation);
+        setImportStatus(null);
       }
     };
     reader.readAsText(file);
+    // Reset input value so same file can be selected again
+    e.target.value = '';
+  };
+
+  const handleApplyRestore = (strategy: 'merge' | 'replace') => {
+    if (!pendingBackup || !pendingBackup.cleanData) return;
+
+    if (strategy === 'replace') {
+      const confirmed = confirm(
+        '⚠️ ADVERTENCIA DE SOBREESCRITURA TOTAL:\n\nEsta acción reemplazará permanentemente tus registros actuales por los del archivo de respaldo.\n\n¿Estás completamente seguro de continuar?'
+      );
+      if (!confirmed) return;
+    }
+
+    const res = StorageService.restoreBackupWithStrategy(pendingBackup.cleanData, strategy);
+    setImportStatus(res.message);
+    setPendingBackup(null);
+    if (res.success) {
+      setTimeout(() => {
+        setShowBackupModal(false);
+        setImportStatus(null);
+      }, 2500);
+    }
   };
 
   return (
@@ -309,19 +334,82 @@ export const Header: React.FC<HeaderProps> = ({
                 <h4 className="text-sm font-semibold text-white mb-1 flex items-center gap-2">
                   <Upload className="w-4 h-4 text-amber-400" /> Restaurar Copia de Seguridad
                 </h4>
-                <p className="text-xs text-slate-400 mb-3">
-                  Carga un archivo de respaldo previo para restaurar todos tus registros.
-                </p>
-                <label className="flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold bg-amber-900/40 hover:bg-amber-900/60 text-amber-200 border border-amber-700/50 rounded-lg cursor-pointer transition-colors">
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>Seleccionar archivo .JSON</span>
-                  <input
-                    type="file"
-                    accept=".json"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                  />
-                </label>
+
+                {!pendingBackup ? (
+                  <>
+                    <p className="text-xs text-slate-400 mb-3">
+                      Carga un archivo de respaldo previo para analizarlo y previsualizar su contenido antes de incorporarlo.
+                    </p>
+                    <label className="flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold bg-amber-900/40 hover:bg-amber-900/60 text-amber-200 border border-amber-700/50 rounded-lg cursor-pointer transition-colors">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>Seleccionar archivo .JSON para examinar</span>
+                      <input
+                        type="file"
+                        accept=".json"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  </>
+                ) : (
+                  <div className="space-y-3 pt-2">
+                    <div className="p-3 bg-slate-900 border border-emerald-800/80 rounded-xl text-xs space-y-2">
+                      <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
+                        <span className="font-bold text-emerald-400">Previsualización de Respaldo:</span>
+                        <span className="text-[10px] text-slate-400 font-mono">v{pendingBackup.metadata?.version || '1.0'}</span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-300">
+                        <div>• <strong>Esmeraldas válidas:</strong> {pendingBackup.summary.emeraldsCount}</div>
+                        <div>• <strong>Órdenes de talla:</strong> {pendingBackup.summary.workOrdersCount}</div>
+                        <div>• <strong>Cotizaciones:</strong> {pendingBackup.summary.quotesCount}</div>
+                        <div>• <strong>Operaciones:</strong> {pendingBackup.summary.operationsCount}</div>
+                      </div>
+
+                      {/* Duplicate & Integrity Warnings */}
+                      <div className="pt-2 border-t border-slate-800 text-[10px] space-y-1">
+                        <div className="text-emerald-300">
+                          ✓ {pendingBackup.duplicates.newEmeraldIds.length} piezas nuevas que no existen en tu inventario.
+                        </div>
+                        {pendingBackup.duplicates.existingEmeraldIds.length > 0 && (
+                          <div className="text-amber-300">
+                            ⚠️ {pendingBackup.duplicates.existingEmeraldIds.length} piezas coinciden con códigos existentes ({pendingBackup.duplicates.existingEmeraldIds.slice(0, 3).join(', ')}{pendingBackup.duplicates.existingEmeraldIds.length > 3 ? '...' : ''}).
+                          </div>
+                        )}
+                        {pendingBackup.summary.corruptRecordsCount > 0 && (
+                          <div className="text-rose-400">
+                            ✕ {pendingBackup.summary.corruptRecordsCount} registros corruptos o incompletos fueron descartados automáticamente.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => handleApplyRestore('merge')}
+                        className="w-full py-2 px-3 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg transition-colors flex items-center justify-center gap-1.5"
+                      >
+                        <span>Fusionar sin sobrescribir (Recomendado)</span>
+                      </button>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleApplyRestore('replace')}
+                          className="flex-1 py-1.5 px-3 text-[11px] font-semibold bg-rose-950/60 hover:bg-rose-900 border border-rose-800/60 text-rose-200 rounded-lg transition-colors"
+                        >
+                          Reemplazar todo
+                        </button>
+                        <button
+                          onClick={() => setPendingBackup(null)}
+                          className="py-1.5 px-3 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-lg transition-colors"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="pt-2 flex justify-between items-center text-[11px] text-slate-500">

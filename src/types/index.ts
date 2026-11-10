@@ -44,6 +44,68 @@ export type CutShape =
   | 'Trapiche'
   | 'Bruto natural / Cristal';
 
+export type DeclaredProvenanceType = 
+  | 'Factura Legal (DIAN)'
+  | 'Cuenta de Cobro Formal'
+  | 'Registro Minero RUCOM'
+  | 'Guía Minera de Transporte'
+  | 'Herencia / Posesión Tradicional'
+  | 'Declaración Verbal No Soportada';
+
+export type LotClassification = 
+  | 'Piedra Suelta'
+  | 'Lote / Paquete'
+  | 'Canutillo en Bruto'
+  | 'Moralla'
+  | 'Muestra de Colección';
+
+export interface ModificationLogEntry {
+  id: string;
+  date: string;
+  action: string;
+  user?: string;
+  details?: string;
+}
+
+export interface DocumentRecord {
+  id: string;
+  type: 'factura' | 'rucom' | 'guia_transporte' | 'certificado_lab' | 'cuenta_cobro' | 'otro';
+  documentNumber: string;
+  entityName: string;
+  issueDate: string;
+  fileUrl?: string;
+  notes?: string;
+  status: 'vigente' | 'vencido' | 'en_tramite';
+}
+
+export interface CustodyTransferEntry {
+  id: string;
+  date: string;
+  fromParty: string;
+  toParty: string;
+  purpose: 'Custodia en Bóveda' | 'Envío a Taller de Talla' | 'Consignación Comercial' | 'Inspección de Laboratorio' | 'Venta Definitiva';
+  location: string;
+  notes?: string;
+  documentReference?: string;
+}
+
+export interface GemologicalObservation {
+  id: string;
+  stoneId: string;
+  date: string;
+  instrumentsUsed: string[]; // e.g. ["Lupa 10x", "Microscopio Campo Oscuro", "Refractómetro 589nm"]
+  refractiveIndex?: string; // e.g. "1.577 - 1.571"
+  birefringence?: string; // e.g. "0.006 uniaxial negativo"
+  specificGravity?: number; // e.g. 2.71
+  pleochroism?: string; // e.g. "Dicroísmo marcado verde azulado / verde amarillento"
+  inclusionsObserved: string[]; // e.g. ["Trifásica salina con halita", "Calcita romboédrica"]
+  fluorescenceLW?: string;
+  fluorescenceSW?: string;
+  opticalCharacter?: string;
+  conclusion: string;
+  observerName: string;
+}
+
 export interface EmeraldStone {
   id: string; // Código único ej: EMR-2025-001
   reference: string; // Nombre o ref comercial
@@ -76,6 +138,18 @@ export interface EmeraldStone {
   ownerName: string;
   photos: string[]; // URLs o Data URIs
   notes?: string;
+  
+  // Advanced Sector Traceability & Management
+  lotClassification?: LotClassification;
+  declaredProvenance?: DeclaredProvenanceType;
+  documentNumber?: string; // NIT/Cédula/N° Factura o Declaración
+  supplierName?: string;
+  supplierRucom?: string;
+  modificationHistory?: ModificationLogEntry[];
+  associatedDocuments?: DocumentRecord[];
+  custodyHistory?: CustodyTransferEntry[];
+  gemologicalObservations?: GemologicalObservation[];
+
   createdAt: string;
   updatedAt: string;
 }
@@ -108,6 +182,7 @@ export interface CuttingWorkOrder {
   stoneId?: string; // ID de piedra si viene de inventario
   roughDescription: string;
   initialWeightCarats: number;
+  roughGrams?: number;
   initialDimensions?: string;
   targetCutShape: CutShape;
   masterCutter: string;
@@ -117,7 +192,11 @@ export interface CuttingWorkOrder {
   completedDate?: string;
   status: 'recibida' | 'desbaste' | 'facetado' | 'pulido' | 'finalizada' | 'cancelada';
   finalWeightCarats?: number;
+  finalGrams?: number;
   yieldPercentage?: number; // Calculado (final / inicial) * 100
+  caratLoss?: number; // Merma en quilates = inicial - final
+  lossPercentage?: number; // % de merma = 100 - yieldPercentage
+  processStages?: { stage: string; completedDate?: string; notes?: string; operator?: string }[];
   laborCostCop: number;
   notes?: string;
   photosBefore: string[];
@@ -158,9 +237,14 @@ export interface TradeOperation {
   stoneId: string;
   stoneRef: string;
   counterpartName: string;
+  counterpartType?: 'Proveedor / Minero' | 'Comprador / Joyero' | 'Taller Lapidario' | 'Coleccionista' | 'Intermediario';
+  counterpartRucom?: string;
+  counterpartNitOrId?: string;
+  associatedStoneIds?: string[];
   amountCop: number;
   amountUsd: number;
   paymentMethod: string;
+  legalSupportType?: 'Factura Electrónica' | 'Cuenta de Cobro con RUT' | 'Declaración de Origen' | 'Soporte Interno';
   invoiceNumber?: string;
   notes?: string;
 }
